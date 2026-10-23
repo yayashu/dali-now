@@ -3,6 +3,8 @@
 [![CI](https://github.com/yayashu/dali-now/actions/workflows/ci.yml/badge.svg)](https://github.com/yayashu/dali-now/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
 
+**中文** | [English](./README.en.md)
+
 > 大理全域「当日文旅活动 + 官方打卡机位 + 现场纪实」微信小程序开源实现。Node.js/Express + Python/Flask 双后端、Vue 3 管理后台、MySQL，代码与文档完整开源。
 >
 > 适合想搭建本地文旅活动聚合平台、或学习「小程序 + 双后端 + 管理后台」完整工程结构的团队。

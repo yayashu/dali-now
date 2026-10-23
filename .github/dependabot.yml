@@ -1,0 +1,26 @@
+version: 2
+
+updates:
+  - package-ecosystem: npm
+    directory: /services/server
+    schedule:
+      interval: monthly
+    open-pull-requests-limit: 3
+    commit-message:
+      prefix: chore(deps)
+
+  - package-ecosystem: npm
+    directory: /apps/admin-panel
+    schedule:
+      interval: monthly
+    open-pull-requests-limit: 3
+    commit-message:
+      prefix: chore(deps)
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    open-pull-requests-limit: 3
+    commit-message:
+      prefix: chore(ci)
