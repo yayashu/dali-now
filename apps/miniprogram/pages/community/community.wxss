@@ -1,0 +1,198 @@
+/* ============================================================
+   社区页 · 大理时光机 — UI/UX 优化版
+   统一品牌绿色系，增强卡片设计
+   ============================================================ */
+.page-community {
+  background: var(--bg-page);
+  min-height: 100vh;
+}
+
+/* ── 头部（复用品牌绿） ── */
+.comm-hero {
+  padding-bottom: 50rpx;
+}
+
+/* ── 轮播 Banner ── */
+.comm-banners {
+  margin: -24rpx var(--space-lg) 0;
+  position: relative;
+  z-index: 5;
+}
+.banner-swiper {
+  height: 260rpx;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+}
+.banner-slide {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 30rpx 40rpx;
+}
+.banner-title {
+  display: flex;
+  align-items: center;
+  font-size: var(--text-xl);
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 8rpx;
+  text-shadow: 0 2rpx 8rpx rgba(0,0,0,0.1);
+}
+.banner-icon {
+  width: 36rpx;
+  height: 36rpx;
+  margin-right: 8rpx;
+}
+.banner-desc {
+  font-size: var(--text-sm);
+  color: rgba(255,255,255,0.85);
+}
+.banner-tag {
+  display: inline-block;
+  margin-top: 12rpx;
+  padding: 4rpx 16rpx;
+  background: rgba(255,255,255,0.2);
+  border-radius: var(--radius-xs);
+  font-size: var(--text-2xs);
+  color: #fff;
+  width: fit-content;
+}
+
+/* ── Tab 切换 ── */
+.comm-tabs {
+  display: flex;
+  margin: var(--space-lg);
+  background: var(--bg-surface);
+  border-radius: var(--radius-md);
+  padding: 6rpx;
+  box-shadow: var(--shadow-xs);
+}
+.comm-tab {
+  flex: 1;
+  text-align: center;
+  padding: 16rpx 0;
+  font-size: var(--text-base);
+  color: var(--text-secondary);
+  border-radius: var(--radius-sm);
+  transition: all var(--duration-fast) var(--ease-out);
+}
+.comm-tab.tab-on {
+  background: linear-gradient(135deg, var(--color-brand), var(--color-brand-light));
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 4rpx 12rpx rgba(var(--color-brand-rgb),0.18);
+}
+.comm-tab:active { transform: scale(0.95); }
+.comm-tab-icon { width: 28rpx; height: 28rpx; margin-right: 6rpx; flex-shrink: 0; }
+
+/* ── 内容滚动 ── */
+.comm-scroll {
+  height: calc(100vh - 500rpx);
+}
+
+/* ── 内容卡片 ── */
+.comm-list {
+  padding: 0 var(--space-lg);
+}
+.comm-card {
+  background: var(--bg-surface);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  margin-bottom: var(--space-lg);
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--duration-fast) var(--ease-out);
+}
+.comm-card:active {
+  transform: scale(0.985);
+}
+
+/* 封面 */
+.comm-cover {
+  position: relative;
+  width: 100%;
+  height: 340rpx;
+  overflow: hidden;
+}
+.comm-cover-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.comm-cover-tag {
+  position: absolute;
+  top: 16rpx;
+  right: 16rpx;
+  padding: 4rpx 16rpx;
+  background: rgba(0,0,0,0.5);
+  border-radius: var(--radius-xs);
+  font-size: var(--text-2xs);
+  color: #fff;
+  backdrop-filter: blur(4rpx);
+}
+
+/* 内容 */
+.comm-body {
+  padding: var(--space-lg);
+}
+.comm-title {
+  font-size: var(--text-md);
+  font-weight: 700;
+  color: var(--text-title);
+  line-height: 1.4;
+  margin-bottom: 10rpx;
+}
+.comm-desc {
+  font-size: var(--text-sm);
+  color: var(--text-hint);
+  line-height: 1.6;
+  margin-bottom: 14rpx;
+}
+
+/* 标签行 */
+.comm-tag-row {
+  display: flex;
+  gap: 8rpx;
+  margin-bottom: 16rpx;
+  flex-wrap: wrap;
+}
+
+/* 底部 */
+.comm-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 16rpx;
+  border-top: 1rpx solid var(--border-light);
+}
+.comm-author {
+  display: flex;
+  align-items: center;
+  gap: 10rpx;
+}
+.comm-avatar {
+  width: 44rpx;
+  height: 44rpx;
+  border-radius: 50%;
+  background: var(--bg-page);
+}
+.comm-author-name {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+.comm-interact {
+  display: flex;
+  gap: 20rpx;
+}
+.comm-stat-item {
+  display: flex;
+  align-items: center;
+  font-size: var(--text-xs);
+  color: var(--text-hint);
+}
+.comm-stat-icon {
+  width: 26rpx;
+  height: 26rpx;
+  margin-right: 4rpx;
+}

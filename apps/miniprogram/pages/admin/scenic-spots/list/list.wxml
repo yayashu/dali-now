@@ -1,0 +1,54 @@
+<!-- 景区管理 - 列表页 -->
+<view class="container page-admin-list">
+  <!-- 头部 -->
+  <view class="admin-header">
+    <view class="admin-header-top">
+      <view class="admin-title"><image class="admin-title-icon" src="/images/icon-landmark.png" mode="aspectFit"></image> 景区管理</view>
+      <view class="admin-header-right">
+        <image class="admin-search-btn" bindtap="onToggleSearch" src="/images/icon-search.png" mode="aspectFit" style="width:36rpx;height:36rpx;"></image>
+        <text class="admin-logout-btn" bindtap="onLogout">退出</text>
+      </view>
+    </view>
+    <view class="admin-header-bar" wx:if="{{showSearch}}">
+      <input class="admin-search-input" placeholder="搜索景区名称..." value="{{keyword}}" bindinput="onSearchInput" bindconfirm="onSearch" focus />
+      <image class="admin-search-clear" bindtap="onClearSearch" src="/images/icon-close.png" mode="aspectFit" style="width:32rpx;height:32rpx;"></image>
+    </view>
+    <view class="admin-stats">共 {{total}} 个景区</view>
+  </view>
+
+  <!-- 列表 -->
+  <view class="admin-list">
+    <view class="admin-item" wx:for="{{list}}" wx:key="id">
+      <view class="admin-item-info">
+        <text class="admin-item-name">{{item.name}}</text>
+        <view class="admin-item-tags">
+          <text class="admin-tag" wx:if="{{item.level}}">{{item.level}}级景区</text>
+          <text class="admin-tag tag-green" wx:if="{{item.ticket_type === 'free'}}">免费</text>
+          <text class="admin-tag tag-orange" wx:elif="{{item.ticket_type === 'paid'}}">¥{{item.ticket_price}}</text>
+          <text class="admin-tag tag-gray">{{item.status === 'active' ? '上架' : '下架'}}</text>
+        </view>
+        <view class="admin-item-district" wx:if="{{item.district_name}}"><image class="admin-loc-icon" src="/images/icon-location-sm.png" mode="aspectFit"></image> {{item.district_name}}</view>
+      </view>
+      <view class="admin-item-actions">
+        <view class="admin-btn-edit" bindtap="onEdit" data-id="{{item.id}}">编辑</view>
+        <view class="admin-btn-del" bindtap="onDelete" data-id="{{item.id}}" data-name="{{item.name}}">删除</view>
+      </view>
+    </view>
+
+    <!-- 空状态 -->
+    <view class="empty-state" wx:if="{{list.length === 0 && !loading}}">
+      <image class="empty-state-icon" src="/images/icon-landmark.png" mode="aspectFit"></image>
+      <text class="empty-state-title">暂无景区数据</text>
+      <text class="empty-state-desc">点击右下角 + 添加景区</text>
+    </view>
+
+    <!-- 加载更多 -->
+    <view class="load-more" wx:if="{{hasMore && list.length > 0}}" bindtap="onLoadMore">点击加载更多...</view>
+    <view class="load-more" wx:elif="{{!hasMore && list.length > 0}}">— 已展示全部 —</view>
+  </view>
+
+  <!-- 添加按钮 -->
+  <view class="admin-fab" bindtap="onAdd">
+    <text class="admin-fab-icon">+</text>
+  </view>
+</view>

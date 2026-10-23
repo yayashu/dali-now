@@ -1,0 +1,32 @@
+<!-- 社区内容详情页 -->
+<view class="container page-comm-detail {{themeClass}}">
+  <view class="back-btn" bindtap="onBack">
+    <text class="back-arrow">‹</text>
+  </view>
+  <view class="detail-article">
+    <text class="article-title">{{post.title}}</text>
+    <view class="article-meta">
+      <view class="article-user">
+        <image class="article-avatar" src="{{post.user_avatar}}" mode="aspectFill"></image>
+        <text>{{post.user_name}}</text>
+      </view>
+      <text class="article-time">{{post.time}}</text>
+    </view>
+
+    <image class="article-cover" src="{{post.cover}}" mode="aspectFill"></image>
+
+    <view class="article-body">
+      <text class="article-content">{{post.content}}</text>
+    </view>
+
+    <view class="article-tags">
+      <view class="tag tag-outline" wx:for="{{post.tags}}" wx:key="*this">{{item}}</view>
+    </view>
+
+    <view class="article-stats">
+      <view class="article-stat-item"><image class="article-stat-icon" src="/images/icon-view.png" mode="aspectFit"></image> {{post.viewCount}}</view>
+      <view class="article-stat-item"><image class="article-stat-icon" src="/images/icon-heart.png" mode="aspectFit"></image> {{post.likeCount}}</view>
+      <view class="article-stat-item"><image class="article-stat-icon" src="/images/icon-comment.png" mode="aspectFit"></image> {{post.commentCount}}</view>
+    </view>
+  </view>
+</view>

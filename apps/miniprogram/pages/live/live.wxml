@@ -1,0 +1,217 @@
+<!--
+  我在现场 · 沉浸式交互重构
+  Hero 头部（在线+发布按钮）+ 搜索（聚焦推荐）+ 沉浸卡片流
+-->
+<view class="container page-live {{themeClass}}">
+
+  <!-- ===== 沉浸式头部（与今日活动一致） ===== -->
+  <view class="live-hero" style="padding-top: calc(8rpx + {{statusBarHeight}}px);">
+    <view class="hero-pattern"></view>
+    <text class="slogan-main">大理此刻 · 我在现场</text>
+    <text class="slogan-sub">真实在场 · 即时纪实 · 氛围共享</text>
+    <view class="hero-bottom">
+      <view class="hero-online" bindtap="onTogglePublishSheet" hover-class="haptic">
+        <view class="hero-dot"></view>
+        <text>当前 <text class="hero-num">{{onlineCount}}</text> 人在线</text>
+      </view>
+      <view class="hero-action" bindtap="onTogglePublishSheet" hover-class="haptic">
+        <image class="action-icon-img" src="/images/icon-plus.png" mode="aspectFit"></image>
+        <text>现场发布</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 内容区 -->
+  <view class="body-area">
+
+    <!-- ═══════════ 搜索框 ═══════════ -->
+    <view class="toolbar">
+      <view class="search-box {{searchFocused ? 'focused' : ''}}">
+        <image class="search-icon-c" src="/images/icon-search.png" mode="aspectFit"></image>
+        <input class="search-input" placeholder="搜索动态 / 地点 / 活动..."
+          value="{{searchKeyword}}" bindinput="onSearchInput" bindconfirm="onSearchConfirm"
+          bindfocus="onSearchFocus" bindblur="onSearchBlur"
+          confirm-type="search" />
+        <view class="search-clear" wx:if="{{searchKeyword}}" catchtap="onClearSearch">
+          <image class="search-clear-x-img" src="/images/icon-close.png" mode="aspectFit"></image>
+        </view>
+      </view>
+    </view>
+
+    <!-- ═══════════ 搜索建议面板 ═══════════ -->
+    <view class="search-suggest" wx:if="{{showSearchSuggest && !searchKeyword}}">
+      <view class="suggest-section" wx:if="{{searchSuggestActivities.length > 0}}">
+        <view class="suggest-label"><image class="live-label-icon" src="/images/icon-hot.png" mode="aspectFit"></image> 热门活动</view>
+        <view class="suggest-item" wx:for="{{searchSuggestActivities}}" wx:key="id"
+          catchtap="onTapSuggestion" data-name="{{item.name}}">
+          <image class="suggest-icon-img" src="/images/icon-tag.png" mode="aspectFit"></image>
+          <text>{{item.name}}</text>
+        </view>
+      </view>
+      <view class="suggest-section" wx:if="{{searchSuggestPoints.length > 0}}">
+        <view class="suggest-label"><image class="live-label-icon" src="/images/icon-location-sm.png" mode="aspectFit"></image> 附近热门打卡点</view>
+        <view class="suggest-item" wx:for="{{searchSuggestPoints}}" wx:key="id"
+          catchtap="onTapSuggestion" data-name="{{item.name}}">
+          <image class="suggest-icon-img" src="/images/icon-location-sm.png" mode="aspectFit"></image>
+          <text class="suggest-name">{{item.name}}</text>
+          <text class="suggest-dist" wx:if="{{item.distanceText}}">{{item.distanceText}}</text>
+        </view>
+      </view>
+      <view class="suggest-empty" wx:if="{{searchSuggestActivities.length === 0 && searchSuggestPoints.length === 0}}">
+        暂无推荐内容
+      </view>
+    </view>
+
+    <!-- ═══════════ 动态流 ═══════════ -->
+    <view class="feed-section">
+      <view class="feed-section-hd">
+        <text class="feed-section-title">实时现场</text>
+        <view class="sort-picker" catchtap="onToggleSortDropdown">
+          <text class="sort-picker-label">{{sortChipText}}</text>
+          <image class="sort-picker-arrow-img {{showSortDropdown ? 'sort-arrow-up' : ''}}" src="/images/icon-arrow-down.png" mode="aspectFit"></image>
+        </view>
+      </view>
+
+      <!-- 排序下拉选项 -->
+      <view class="sort-dropdown" wx:if="{{showSortDropdown}}">
+        <view class="sort-option {{sortType === item.value ? 'sort-option-on' : ''}}"
+          wx:for="{{sortOptions}}" wx:key="value"
+          catchtap="onSelectSort" data-value="{{item.value}}">
+          <text>{{item.label}}</text>
+          <image class="sort-check-img" wx:if="{{sortType === item.value}}" src="/images/icon-check-small.png" mode="aspectFit"></image>
+        </view>
+      </view>
+
+      <!-- 下拉遮罩 -->
+      <view class="sort-dropdown-mask" wx:if="{{showSortDropdown}}" catchtap="onCloseSortDropdown"></view>
+
+      <!-- 空状态 -->
+      <view class="empty-state" wx:if="{{livePosts.length === 0}}">
+        <image class="empty-icon-img" src="/images/icon-empty-state.png" mode="aspectFit"></image>
+        <text class="empty-title" wx:if="{{hasActiveFilter || searchKeyword}}">没有找到匹配的动态</text>
+        <text class="empty-title" wx:else>还没有现场动态</text>
+        <text class="empty-desc" wx:if="{{hasActiveFilter || searchKeyword}}">试试调整筛选条件或换个关键词</text>
+        <text class="empty-desc" wx:else>快来发布第一条「我在现场」吧！</text>
+        <view wx:if="{{hasActiveFilter || searchKeyword}}" class="empty-action" catchtap="onClearAllFilters">
+          清除筛选
+        </view>
+        <view wx:else class="empty-action" bindtap="onTogglePublishSheet">
+          立即发布
+        </view>
+      </view>
+
+      <!-- 卡片列表 -->
+      <view class="card-list">
+        <view class="card" wx:for="{{livePosts}}" wx:key="id" wx:for-item="post">
+
+          <!-- 顶部：用户信息 -->
+          <view class="card-hd">
+            <image class="card-avatar" src="{{post.user_avatar}}" mode="aspectFill"></image>
+            <view class="card-user">
+              <text class="card-name">{{post.user_name}}</text>
+              <view class="card-tags-row" wx:if="{{post.is_verified || post.activity_name || post.point_name}}">
+                <view class="card-tag card-tag-verify" wx:if="{{post.is_verified}}"><image class="card-tag-icon" src="/images/icon-check-small.png" mode="aspectFit"></image> 已核验</view>
+                <view class="card-tag card-tag-activity card-tag-ellipsis" wx:if="{{post.activity_name}}" catchtap="onTapActivity" data-activity-id="{{post.activity_id}}"><image class="card-tag-icon" src="/images/icon-tag.png" mode="aspectFit"></image> {{post.activity_name}}</view>
+                <view class="card-tag card-tag-point card-tag-ellipsis" wx:if="{{post.point_name}}" catchtap="onTapPoint" data-point-id="{{post.point_id}}"><image class="card-tag-icon" src="/images/icon-camera.png" mode="aspectFit"></image> {{post.point_name}}</view>
+              </view>
+              <view class="card-tags" wx:if="{{post.distanceText}}">
+                <view class="card-tag card-tag-dist"><image class="card-tag-icon" src="/images/icon-distance.png" mode="aspectFit"></image> {{post.distanceText}}</view>
+              </view>
+            </view>
+            <view class="card-right">
+              <text class="card-time">{{post.time}}</text>
+              <view class="card-more" wx:if="{{post.isMine}}" catchtap="onPostMore" data-id="{{post.id}}">
+                <image class="card-more-icon" src="/images/icon-more.png" mode="aspectFit"></image>
+              </view>
+            </view>
+          </view>
+
+          <!-- 内容 -->
+          <view class="card-body" wx:if="{{post.content}}">
+            <text class="card-text">{{post.content}}</text>
+          </view>
+
+          <!-- 图片：一行3张，最多展示3张，点击预览全部 -->
+          <view class="card-media" wx:if="{{post.images.length > 0}}">
+            <image wx:for="{{post.images}}" wx:for-item="img" wx:key="index" wx:if="{{index < 3}}"
+              class="card-img {{post.images.length === 1 ? 'card-img-full' : ''}}"
+              src="{{img}}" mode="aspectFill" lazy-load
+              bindtap="onPreviewImage" data-urls="{{post.images}}" data-current="{{img}}">
+            </image>
+            <view class="card-more-mask" wx:if="{{post.images.length > 3}}"
+              catchtap="onPreviewImage" data-urls="{{post.images}}" data-current="{{post.images[2]}}">
+              <text class="card-more-text">+{{post.images.length - 3}}</text>
+            </view>
+          </view>
+
+          <!-- 视频 -->
+          <view class="card-video" wx:if="{{post.type === 'video'}}">
+            <image class="card-video-bg" src="{{post.cover}}" mode="aspectFill"></image>
+            <image class="card-play" src="/images/icon-play.png" mode="aspectFit"></image>
+          </view>
+
+          <!-- 底部：地点 + 互动 -->
+          <view class="card-ft">
+            <view class="card-loc">
+              <image class="card-loc-icon" src="/images/icon-location-sm.png" mode="aspectFit"></image>
+              <text>{{post.location}}</text>
+            </view>
+            <view class="card-actions">
+              <view class="card-act" catchtap="onLike" data-id="{{post.id}}">
+                <image class="card-act-icon {{post.isLiked ? 'icon-liked' : ''}}" src="{{post.isLiked ? '/images/icon-heart.png' : '/images/icon-heart.png'}}" mode="aspectFit"></image>
+                <text class="act-num">{{post.like_count || 0}}</text>
+              </view>
+              <view class="card-act" catchtap="onComment" data-id="{{post.id}}">
+                <image class="card-act-icon" src="/images/icon-comment.png" mode="aspectFit"></image>
+                <text class="act-num">{{post.comment_count || 0}}</text>
+              </view>
+              <view class="card-act" catchtap="onSharePost" data-id="{{post.id}}">
+                <image class="card-act-icon" src="/images/icon-share-sm.png" mode="aspectFit"></image>
+                <text class="act-num">{{post.share_count || 0}}</text>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <!-- 底部提示 -->
+      <view class="feed-end" wx:if="{{livePosts.length > 0 && hasMore}}">
+        上拉加载更多...
+      </view>
+      <view class="feed-end" wx:elif="{{livePosts.length > 0 && !hasMore}}">
+        — 已加载全部 —
+      </view>
+    </view>
+
+    <view class="safe-bottom"></view>
+  </view>
+
+  <!-- ═══════════ 极速发布浮层 ═══════════ -->
+  <view class="sheet-mask {{showPublishSheet ? 'sheet-mask-show' : ''}}" catchtap="onClosePublishSheet"></view>
+  <view class="sheet {{showPublishSheet ? 'sheet-show' : ''}}">
+    <view class="sheet-bar"><view class="sheet-handle"></view></view>
+    <text class="sheet-title">极速发布</text>
+    <view class="sheet-options">
+      <view class="sheet-opt" bindtap="onSelectQuickPublish">
+        <image class="sheet-opt-icon-img opt-flash" src="/images/icon-quick.png" mode="aspectFit"></image>
+        <view class="sheet-opt-text">
+          <text class="sheet-opt-title">极速状态</text>
+          <text class="sheet-opt-desc">一键发布「我在现场」状态</text>
+        </view>
+        <text class="sheet-opt-arrow">›</text>
+      </view>
+    </view>
+    <view class="sheet-tip">
+      <text>发布前将通过「实时定位 + 现场实拍」核验您的在场状态</text>
+    </view>
+    <view class="sheet-cancel" catchtap="onClosePublishSheet">
+      <text>取消</text>
+    </view>
+  </view>
+
+  <!-- 返回顶部 -->
+  <view class="back-to-top {{showBackTop ? 'back-to-top-show' : ''}}" bindtap="onBackTop" hover-class="haptic">
+    <image class="back-to-top-arrow" src="/images/icon-up.png" mode="aspectFit"></image>
+  </view>
+
+</view>

@@ -1,0 +1,59 @@
+<!-- 预约确认成功页 -->
+<view class="container page-confirm {{themeClass}}">
+  <view class="confirm-content">
+    <view class="success-icon">
+      <image src="/images/icon-success.png" mode="aspectFit"></image>
+    </view>
+    <text class="success-title">{{isFree ? '预约成功！' : '报名成功！'}}</text>
+    <text class="success-desc">您已成功{{isFree ? '预约' : '报名'}}「{{activityName}}」</text>
+
+    <!-- 电子凭证 -->
+    <view class="ticket-card">
+      <view class="ticket-header">
+        <text class="ticket-label">电子凭证</text>
+        <text class="ticket-code">DL20260602{{randomCode}}</text>
+      </view>
+      <view class="ticket-body">
+        <view class="ticket-info-row">
+          <text class="ticket-info-label">活动名称</text>
+          <text class="ticket-info-value">{{activityName}}</text>
+        </view>
+        <view class="ticket-info-row">
+          <text class="ticket-info-label">活动时间</text>
+          <text class="ticket-info-value">2026年6月2日</text>
+        </view>
+        <view class="ticket-info-row">
+          <text class="ticket-info-label">凭证编号</text>
+          <text class="ticket-info-value">DL20260602{{randomCode}}</text>
+        </view>
+      </view>
+      <view class="ticket-qr">
+        <view class="qr-placeholder">
+          <text>二维码</text>
+        </view>
+        <text class="qr-tip">凭此码现场核销入场</text>
+      </view>
+    </view>
+
+    <!-- 操作按钮 -->
+    <view class="confirm-actions">
+      <view class="btn-primary btn-block" bindtap="onViewActivity">
+        返回活动详情
+      </view>
+      <view class="btn-outline btn-block mt-20" bindtap="onGoLivePost">
+        <image src="/images/icon-live.png" mode="aspectFit"></image>
+        <text>到达后发布「我在现场」</text>
+      </view>
+    </view>
+
+    <!-- 提醒设置 -->
+    <view class="remind-box">
+      <image src="/images/icon-bell.png" mode="aspectFit"></image>
+      <view class="remind-text">
+        <text class="remind-title">活动开始前1小时</text>
+        <text class="remind-desc">将通过小程序消息提醒您</text>
+      </view>
+      <view class="tag tag-primary">已开启</view>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,73 @@
+<!-- 关于大理此刻 -->
+<view class="container page-about {{themeClass}}">
+
+  <!-- 沉浸式头部 -->
+  <view class="about-hero" style="padding-top: calc({{statusBarHeight}}px);">
+    <view class="hero-nav-row">
+      <view class="nav-back-btn" bindtap="onNavBack" hover-class="nav-back-active">
+        <text class="nav-back-arrow">‹</text>
+      </view>
+      <text class="nav-title">关于大理此刻</text>
+    </view>
+
+    <view class="hero-logo-area">
+      <view class="hero-logo">DL</view>
+      <text class="hero-app-name">大理此刻</text>
+      <text class="hero-version">Version 1.0</text>
+    </view>
+  </view>
+
+  <!-- 内容面板 -->
+  <view class="about-panel">
+
+    <!-- 介绍卡片 -->
+    <view class="about-card">
+      <text class="card-title">关于我们</text>
+      <text class="card-content">{{appIntro}}</text>
+    </view>
+
+    <!-- 隐私协议 -->
+    <view class="about-card privacy-card" bindtap="onShowPrivacy" hover-class="card-active">
+      <view class="card-row">
+        <view class="card-icon"><image src="/images/icon-document.png" mode="aspectFit" style="width:40rpx;height:40rpx;"></image></view>
+        <view class="card-text">
+          <text class="card-row-title">用户隐私协议</text>
+          <text class="card-row-desc">了解我们如何保护您的个人信息</text>
+        </view>
+        <text class="card-arrow">›</text>
+      </view>
+    </view>
+
+    <!-- 联系我们 -->
+    <view class="about-card contact-card">
+      <text class="card-title">联系我们</text>
+      <view class="contact-row">
+        <text class="contact-label">联系邮箱</text>
+        <text class="contact-value">contact@your-domain.com</text>
+      </view>
+      <view class="contact-row">
+        <text class="contact-label">小程序内</text>
+        <text class="contact-value">我的 → 意见反馈</text>
+      </view>
+    </view>
+
+    <text class="copyright">Copyright © 2026 大理此刻 · All Rights Reserved</text>
+  </view>
+
+  <!-- 隐私协议弹窗 -->
+  <view class="privacy-modal" wx:if="{{showPrivacyModal}}" catchtap="onHidePrivacy">
+    <view class="privacy-modal-content" catchtap="">
+      <view class="privacy-modal-header">
+        <text class="privacy-modal-title">用户隐私协议</text>
+        <image class="privacy-modal-close" bindtap="onHidePrivacy" src="/images/icon-close.png" mode="aspectFit"></image>
+      </view>
+      <scroll-view class="privacy-modal-body" scroll-y>
+        <text class="privacy-content-text">{{privacyContent}}</text>
+      </scroll-view>
+      <view class="privacy-modal-footer">
+        <button class="privacy-close-btn" bindtap="onHidePrivacy">关闭</button>
+      </view>
+    </view>
+  </view>
+
+</view>

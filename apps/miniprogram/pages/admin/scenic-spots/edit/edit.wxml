@@ -1,0 +1,307 @@
+<!-- 景区 - 编辑/新增 -->
+<view class="container page-admin-edit">
+  <!-- 头部 -->
+  <view class="edit-header">
+    <view class="edit-header-top">
+      <view class="edit-back" bindtap="onBack"><image class="edit-back-icon" src="/images/icon-back.png" mode="aspectFit"></image> 返回</view>
+      <text class="edit-title">{{isEdit ? '编辑景区' : '新增景区'}}</text>
+    </view>
+  </view>
+
+  <view class="edit-body">
+    <!-- 基础信息 -->
+    <view class="card">
+      <view class="section-title">基础信息</view>
+
+      <view class="form-group">
+        <text class="form-label required">景区名称</text>
+        <input class="form-input" placeholder="如：大理古城" value="{{form.name}}" bindinput="onFieldInput" data-field="name" maxlength="100" />
+      </view>
+
+      <!-- 所属区域 -->
+      <view class="form-group" bindtap="onToggleDistrict">
+        <text class="form-label">所属区域</text>
+        <view class="form-picker">
+          <text wx:if="{{form.district_code}}" class="picker-value">{{district_name}}</text>
+          <text wx:else class="picker-placeholder">选择区域</text>
+          <view class="picker-arrow"><image src="/images/icon-arrow-down.png" mode="aspectFit" style="width:20rpx;height:20rpx;display:inline-block;"></image></view>
+        </view>
+      </view>
+
+      <!-- 区域选择弹窗 -->
+      <view class="picker-popup" wx:if="{{showDistrictPicker}}" catchtap="onToggleDistrict">
+        <view class="picker-mask"></view>
+        <view class="picker-panel" catchtap="">
+          <view class="picker-item {{form.district_code === item.code ? 'active' : ''}}" wx:for="{{districts}}" wx:key="code" bindtap="onDistrictSelect" data-code="{{item.code}}" data-name="{{item.name}}">
+            <text>{{item.name}}</text>
+            <image class="picker-check" wx:if="{{form.district_code === item.code}}" src="/images/icon-check-small.png" mode="aspectFit" style="width:24rpx;height:24rpx;"></image>
+          </view>
+        </view>
+      </view>
+
+      <!-- 景区级别 -->
+      <view class="form-group">
+        <text class="form-label">景区级别</text>
+        <view class="form-radio-group">
+          <view class="form-radio {{form.level === '5A' ? 'active' : ''}}" bindtap="onLevelChange" data-value="5A">5A</view>
+          <view class="form-radio {{form.level === '4A' ? 'active' : ''}}" bindtap="onLevelChange" data-value="4A">4A</view>
+          <view class="form-radio {{form.level === '3A' ? 'active' : ''}}" bindtap="onLevelChange" data-value="3A">3A</view>
+          <view class="form-radio {{form.level === '2A' ? 'active' : ''}}" bindtap="onLevelChange" data-value="2A">2A</view>
+          <view class="form-radio {{form.level === 'A' ? 'active' : ''}}" bindtap="onLevelChange" data-value="A">A</view>
+        </view>
+      </view>
+
+      <!-- 标签 -->
+      <view class="form-group">
+        <text class="form-label">标签（逗号分隔）</text>
+        <input class="form-input" placeholder="如：古镇,苍山,洱海,白族风情" value="{{form.tags}}" bindinput="onFieldInput" data-field="tags" maxlength="200" />
+      </view>
+
+      <!-- 封面图 -->
+      <view class="form-group">
+        <text class="form-label">封面图</text>
+        <view class="upload-area" bindtap="onChooseCover">
+          <image wx:if="{{form.cover}}" class="upload-preview" src="{{form.cover}}" mode="aspectFill" />
+          <view wx:else class="upload-placeholder"><image src="/images/icon-camera.png" mode="aspectFit" style="width:32rpx;height:32rpx;display:inline-block;margin-right:6rpx;vertical-align:middle;"></image> 点击上传封面</view>
+        </view>
+      </view>
+
+      <!-- 多图上传 -->
+      <view class="form-group">
+        <text class="form-label">景区图片（多图）</text>
+        <view class="image-list">
+          <view class="image-item" wx:for="{{form.images}}" wx:key="index">
+            <image class="image-preview" src="{{item.url}}" mode="aspectFill" />
+            <input class="image-desc" placeholder="图片描述" value="{{item.desc}}" bindinput="onImageDescInput" data-index="{{index}}" />
+            <image class="image-remove" bindtap="onRemoveImage" data-index="{{index}}" src="/images/icon-close.png" mode="aspectFit" style="width:28rpx;height:28rpx;"></image>
+          </view>
+          <view class="image-add" bindtap="onAddImage">
+            <text class="image-add-icon">+</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 状态 -->
+      <view class="form-group">
+        <text class="form-label">状态</text>
+        <view class="form-radio-group">
+          <view class="form-radio {{form.status === 'active' ? 'active' : ''}}" bindtap="onStatusChange" data-value="active">上架</view>
+          <view class="form-radio {{form.status === 'inactive' ? 'active' : ''}}" bindtap="onStatusChange" data-value="inactive">下架</view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 位置信息 -->
+    <view class="card">
+      <view class="section-title">位置信息</view>
+
+      <view class="form-group" bindtap="onChooseLocation" data-field="address">
+        <text class="form-label">景区位置</text>
+        <view class="form-picker">
+          <text wx:if="{{form.address}}">{{form.address}}</text>
+          <text wx:else class="picker-placeholder">点击地图选点</text>
+          <text class="picker-arrow">›</text>
+        </view>
+      </view>
+
+      <view class="form-row">
+        <view class="form-group half">
+          <text class="form-label">纬度</text>
+          <input class="form-input" placeholder="纬度" value="{{form.latitude}}" bindinput="onFieldInput" data-field="latitude" />
+        </view>
+        <view class="form-group half">
+          <text class="form-label">经度</text>
+          <input class="form-input" placeholder="经度" value="{{form.longitude}}" bindinput="onFieldInput" data-field="longitude" />
+        </view>
+      </view>
+
+      <view class="form-group">
+        <text class="form-label">详细地址</text>
+        <input class="form-input" placeholder="详细地址" value="{{form.address}}" bindinput="onFieldInput" data-field="address" maxlength="200" />
+      </view>
+
+      <view class="form-group">
+        <text class="form-label">电话</text>
+        <input class="form-input" placeholder="联系电话" value="{{form.phone}}" bindinput="onFieldInput" data-field="phone" />
+      </view>
+
+      <view class="form-group">
+        <text class="form-label">官网</text>
+        <input class="form-input" placeholder="官方网站" value="{{form.website}}" bindinput="onFieldInput" data-field="website" />
+      </view>
+    </view>
+
+    <!-- 入口信息 -->
+    <view class="card">
+      <view class="section-title"><image class="section-title-icon" src="/images/icon-entrance.png" mode="aspectFit"></image> 入口信息</view>
+
+      <view class="form-group" bindtap="onChooseLocation" data-field="entrance">
+        <text class="form-label">入口位置</text>
+        <view class="form-picker">
+          <text wx:if="{{form.entrance}}">{{form.entrance}}</text>
+          <text wx:else class="picker-placeholder">点击地图选点</text>
+          <text class="picker-arrow">›</text>
+        </view>
+      </view>
+
+      <view class="form-row">
+        <view class="form-group half">
+          <text class="form-label">入口纬度</text>
+          <input class="form-input" placeholder="入口纬度" value="{{form.entrance_lat}}" bindinput="onFieldInput" data-field="entrance_lat" />
+        </view>
+        <view class="form-group half">
+          <text class="form-label">入口经度</text>
+          <input class="form-input" placeholder="入口经度" value="{{form.entrance_lng}}" bindinput="onFieldInput" data-field="entrance_lng" />
+        </view>
+      </view>
+    </view>
+
+    <!-- 停车场信息 -->
+    <view class="card">
+      <view class="section-title"><image class="section-title-icon" src="/images/icon-parking.png" mode="aspectFit"></image> 停车场信息</view>
+
+      <view class="form-group" bindtap="onChooseLocation" data-field="parking">
+        <text class="form-label">停车场位置</text>
+        <view class="form-picker">
+          <text wx:if="{{form.parking}}">{{form.parking}}</text>
+          <text wx:else class="picker-placeholder">点击地图选点</text>
+          <text class="picker-arrow">›</text>
+        </view>
+      </view>
+
+      <view class="form-row">
+        <view class="form-group half">
+          <text class="form-label">停车场纬度</text>
+          <input class="form-input" placeholder="纬度" value="{{form.parking_lat}}" bindinput="onFieldInput" data-field="parking_lat" />
+        </view>
+        <view class="form-group half">
+          <text class="form-label">停车场经度</text>
+          <input class="form-input" placeholder="经度" value="{{form.parking_lng}}" bindinput="onFieldInput" data-field="parking_lng" />
+        </view>
+      </view>
+
+      <view class="form-group">
+        <text class="form-label">停车费</text>
+        <input class="form-input" placeholder="如：10元/次" value="{{form.parking_fee}}" bindinput="onFieldInput" data-field="parking_fee" />
+      </view>
+    </view>
+
+    <!-- 门票信息 -->
+    <view class="card">
+      <view class="section-title"><image class="section-title-icon" src="/images/icon-ticket.png" mode="aspectFit"></image> 门票信息</view>
+
+      <view class="form-group">
+        <text class="form-label">门票类型</text>
+        <view class="form-radio-group">
+          <view class="form-radio {{form.ticket_type === 'free' ? 'active' : ''}}" bindtap="onTicketTypeChange" data-value="free">免费</view>
+          <view class="form-radio {{form.ticket_type === 'paid' ? 'active' : ''}}" bindtap="onTicketTypeChange" data-value="paid">收费</view>
+        </view>
+      </view>
+
+      <view class="form-group" wx:if="{{form.ticket_type === 'paid'}}">
+        <text class="form-label">门票价格（元）</text>
+        <input class="form-input" type="digit" placeholder="如：58" value="{{form.ticket_price}}" bindinput="onFieldInput" data-field="ticket_price" />
+      </view>
+
+      <view class="form-group">
+        <text class="form-label">票价说明</text>
+        <textarea class="form-textarea" placeholder="票价补充说明..." value="{{form.ticket_note}}" bindinput="onFieldInput" data-field="ticket_note" maxlength="300" auto-height />
+      </view>
+
+      <view class="form-group">
+        <text class="form-label">优惠政策</text>
+        <textarea class="form-textarea" placeholder="半价/免票等优惠政策..." value="{{form.half_price_note}}" bindinput="onFieldInput" data-field="half_price_note" maxlength="500" auto-height />
+      </view>
+    </view>
+
+    <!-- 开放与游览信息 -->
+    <view class="card">
+      <view class="section-title"><image class="section-title-icon" src="/images/icon-clock-sm.png" mode="aspectFit"></image> 开放与游览</view>
+
+      <view class="form-group">
+        <text class="form-label">开放时间</text>
+        <input class="form-input" placeholder="如：08:00" value="{{form.open_time}}" bindinput="onFieldInput" data-field="open_time" />
+      </view>
+
+      <view class="form-group">
+        <text class="form-label">关闭时间</text>
+        <input class="form-input" placeholder="如：18:00" value="{{form.close_time}}" bindinput="onFieldInput" data-field="close_time" />
+      </view>
+
+      <view class="form-group">
+        <text class="form-label">最佳游览季节</text>
+        <input class="form-input" placeholder="如：3-5月（春季花季），9-11月（秋季）" value="{{form.best_season}}" bindinput="onFieldInput" data-field="best_season" maxlength="200" />
+      </view>
+
+      <view class="form-group">
+        <text class="form-label">建议游览时长</text>
+        <input class="form-input" placeholder="如：2-3小时" value="{{form.suggested_time}}" bindinput="onFieldInput" data-field="suggested_time" />
+      </view>
+    </view>
+
+    <!-- 介绍 -->
+    <view class="card">
+      <view class="section-title"><image class="section-title-icon" src="/images/icon-note.png" mode="aspectFit"></image> 景区介绍</view>
+
+      <view class="form-group">
+        <text class="form-label">简介（短描述）</text>
+        <textarea class="form-textarea" placeholder="景区简要介绍..." value="{{form.description}}" bindinput="onFieldInput" data-field="description" maxlength="500" auto-height />
+      </view>
+
+      <view class="form-group">
+        <text class="form-label">景区概况（长文本）</text>
+        <textarea class="form-textarea textarea-lg" placeholder="详细的景区概况介绍..." value="{{form.overview}}" bindinput="onFieldInput" data-field="overview" maxlength="5000" auto-height />
+      </view>
+    </view>
+
+    <!-- 配套设施 -->
+    <view class="card">
+      <view class="section-title"><image class="section-title-icon" src="/images/icon-facilities.png" mode="aspectFit"></image> 配套设施与交通</view>
+
+      <view class="form-group">
+        <text class="form-label">配套设施</text>
+        <textarea class="form-textarea" placeholder="如：停车场、游客中心、卫生间、餐饮、购物..." value="{{form.facilities}}" bindinput="onFieldInput" data-field="facilities" maxlength="500" auto-height />
+      </view>
+
+      <view class="form-group">
+        <text class="form-label">交通指南</text>
+        <textarea class="form-textarea" placeholder="如何到达景区..." value="{{form.transport}}" bindinput="onFieldInput" data-field="transport" maxlength="500" auto-height />
+      </view>
+    </view>
+
+    <!-- 其他 -->
+    <view class="card">
+      <view class="section-title"><image class="section-title-icon" src="/images/icon-clipboard.png" mode="aspectFit"></image> 其他信息</view>
+
+      <view class="form-group">
+        <text class="form-label">注意事项</text>
+        <textarea class="form-textarea" placeholder="游客需注意的事项..." value="{{form.notice}}" bindinput="onFieldInput" data-field="notice" maxlength="500" auto-height />
+      </view>
+
+      <view class="form-group">
+        <text class="form-label">游览贴士</text>
+        <textarea class="form-textarea" placeholder="游玩小贴士..." value="{{form.tips}}" bindinput="onFieldInput" data-field="tips" maxlength="500" auto-height />
+      </view>
+
+      <view class="form-row">
+        <view class="form-group half">
+          <text class="form-label">热度</text>
+          <input class="form-input" type="digit" placeholder="0" value="{{form.popularity}}" bindinput="onFieldInput" data-field="popularity" />
+        </view>
+        <view class="form-group half">
+          <text class="form-label">排序</text>
+          <input class="form-input" type="digit" placeholder="0" value="{{form.sort_order}}" bindinput="onFieldInput" data-field="sort_order" />
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="safe-bottom" style="height:120rpx;"></view>
+
+  <!-- 提交按钮 -->
+  <view class="submit-bar">
+    <button class="btn-primary btn-block" bindtap="onSubmit" loading="{{submitting}}" disabled="{{submitting}}">
+      {{isEdit ? '保存修改' : '创建景区'}}
+    </button>
+  </view>
+</view>

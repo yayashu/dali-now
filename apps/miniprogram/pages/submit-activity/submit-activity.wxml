@@ -1,0 +1,94 @@
+<!-- 我要发布活动 -->
+<view class="container page-submit">
+  <!-- 头部 -->
+  <view class="submit-hero page-header-brand">
+    <view class="submit-hero-inner">
+      <text class="submit-hero-title">我要发布活动</text>
+      <text class="submit-hero-desc">发布你知道的大理本地特色活动</text>
+    </view>
+  </view>
+
+  <!-- 表单区域 -->
+  <view class="submit-form">
+    <!-- 活动名称 -->
+    <view class="form-group">
+      <text class="form-label required">活动名称</text>
+      <input class="form-input" placeholder="例如: 三月街民族节" value="{{form.name}}" bindinput="onFieldInput" data-field="name" maxlength="50" />
+    </view>
+
+    <!-- 活动类型 -->
+    <view class="form-group">
+      <text class="form-label">活动类型</text>
+      <input class="form-input" placeholder="例如: 民俗活动/音乐节/市集..." value="{{form.type_name}}" bindinput="onFieldInput" data-field="type_name" maxlength="20" />
+    </view>
+
+    <!-- 封面图片 -->
+    <view class="form-group form-group-vertical">
+      <text class="form-label">封面图片</text>
+      <view class="upload-area" bindtap="onChooseImage">
+        <image wx:if="{{form.cover}}" class="upload-preview" src="{{form.cover}}" mode="aspectFill" />
+        <view wx:else class="upload-placeholder">
+          <image class="upload-icon" src="/images/icon-camera.png" mode="aspectFit"></image>
+          <text class="upload-text">点击上传封面图</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 日期 -->
+    <view class="form-group" bindtap="onPickDate">
+      <text class="form-label required">活动日期</text>
+      <view class="form-input form-input-tap">
+        <text wx:if="{{form.date}}" class="form-value">{{form.date}}</text>
+        <text wx:else class="form-placeholder">点击选择日期</text>
+        <text class="form-arr">›</text>
+      </view>
+    </view>
+
+    <!-- 时间 -->
+    <view class="form-group">
+      <text class="form-label">活动时间</text>
+      <input class="form-input" placeholder="例如: 09:00-18:00" value="{{form.time_range}}" bindinput="onFieldInput" data-field="time_range" maxlength="50" />
+    </view>
+
+    <!-- 位置 -->
+    <view class="form-group" bindtap="onChooseLocation">
+      <text class="form-label required">活动地点</text>
+      <view class="form-input form-input-tap">
+        <text wx:if="{{form.location}}" class="form-value">{{form.location}}</text>
+        <text wx:else class="form-placeholder">点击选择地图位置</text>
+        <text class="form-arr">›</text>
+      </view>
+    </view>
+
+    <!-- 主办方 -->
+    <view class="form-group">
+      <text class="form-label">主办方</text>
+      <input class="form-input" placeholder="例如: 大理州文旅局" value="{{form.organizer}}" bindinput="onFieldInput" data-field="organizer" maxlength="50" />
+    </view>
+
+    <!-- 活动描述 -->
+    <view class="form-group form-group-vertical">
+      <text class="form-label">活动描述</text>
+      <textarea class="form-textarea" placeholder="描述活动内容、亮点、参与方式等..." value="{{form.description}}" bindinput="onFieldInput" data-field="description" maxlength="500" auto-height />
+    </view>
+
+    <!-- 交通指南 -->
+    <view class="form-group form-group-vertical">
+      <text class="form-label">交通指南/注意事项</text>
+      <textarea class="form-textarea" placeholder="如何到达、停车信息、注意事项等..." value="{{form.notes}}" bindinput="onFieldInput" data-field="notes" maxlength="300" auto-height />
+    </view>
+  </view>
+
+  <!-- 提示信息 -->
+  <view class="submit-notice">
+    <image class="notice-icon" src="/images/icon-tip.png" mode="aspectFit"></image>
+    <text class="notice-text">提交后需管理员审核通过，才会在"今日活动"中展示</text>
+  </view>
+
+  <view class="safe-bottom" style="height:120rpx;"></view>
+
+  <!-- 提交按钮 -->
+  <view class="submit-bar">
+    <button class="btn-primary btn-block" bindtap="onSubmit" loading="{{submitting}}" disabled="{{submitting}}">提交审核</button>
+  </view>
+</view>

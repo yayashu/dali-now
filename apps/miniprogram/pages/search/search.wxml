@@ -1,0 +1,115 @@
+<!-- 搜索页 -->
+<view class="container page-search {{themeClass}}" style="padding-top: {{statusBarHeight}}px;">
+  <!-- 搜索栏 -->
+  <view class="search-header">
+    <view class="search-back" bindtap="onBackTap" hover-class="haptic">
+      <text class="search-back-icon">‹</text>
+    </view>
+    <view class="search-input-wrap {{keyword ? 'search-focused' : ''}}">
+      <image class="search-icon" src="/images/icon-search.png" mode="aspectFit"></image>
+      <input class="search-input"
+        placeholder="{{searchTab === 'scenic' ? '搜索景点名称、地址...' : '搜索活动名称、地点、类型...'}}"
+        value="{{keyword}}"
+        bindinput="onSearchInput"
+        bindconfirm="onSearch"
+        focus="{{false}}"
+        confirm-type="search"
+        placeholder-class="search-placeholder">
+      </input>
+      <image class="search-clear" wx:if="{{keyword}}" bindtap="onClear" src="/images/icon-close.png" mode="aspectFit"></image>
+    </view>
+    <text class="search-cancel" bindtap="onCancel">取消</text>
+  </view>
+
+  <!-- Tab 切换 -->
+  <view class="search-tab-bar">
+    <view class="search-tab {{searchTab === 'activity' ? 'search-tab-on' : ''}}" bindtap="onSearchTab" data-tab="activity"><image class="search-tab-icon" src="/images/icon-activity.png" mode="aspectFit"></image> 活动</view>
+    <view class="search-tab {{searchTab === 'scenic' ? 'search-tab-on' : ''}}" bindtap="onSearchTab" data-tab="scenic"><image class="search-tab-icon" src="/images/icon-mountain.png" mode="aspectFit"></image> 景点</view>
+  </view>
+
+  <!-- 热搜 + 历史（无关键字时，仅活动Tab） -->
+  <block wx:if="{{!keyword && results.length === 0 && searchTab === 'activity'}}">
+    <!-- 热门搜索 -->
+    <view class="sr-section">
+      <view class="sr-section-header">
+        <view class="sr-section-title"><image class="search-section-icon" src="/images/icon-hot.png" mode="aspectFit"></image> 热门搜索</view>
+      </view>
+      <view class="hot-tags">
+        <view class="hot-tag fade-in-{{index}}" wx:for="{{hotTags}}" wx:key="*this" bindtap="onHotTag" data-tag="{{item}}">
+          {{item}}
+        </view>
+      </view>
+    </view>
+
+    <!-- 搜索历史 -->
+    <view class="sr-section" wx:if="{{history.length > 0}}">
+      <view class="sr-section-header">
+        <view class="sr-section-title"><image class="search-section-icon" src="/images/icon-clock-sm.png" mode="aspectFit"></image> 搜索历史</view>
+        <text class="sr-clear-btn" bindtap="onClearHistory">清空</text>
+      </view>
+      <view class="history-list">
+        <view class="history-item" wx:for="{{history}}" wx:key="*this" bindtap="onHistoryTap" data-tag="{{item}}">
+          <image class="history-icon" src="/images/icon-reload.png" mode="aspectFit"></image>
+          <text class="history-text text-ellipsis">{{item}}</text>
+          <image class="history-remove" catchtap="onRemoveHistory" data-index="{{index}}" src="/images/icon-close.png" mode="aspectFit"></image>
+        </view>
+      </view>
+    </view>
+  </block>
+
+  <!-- 搜索结果 - 活动 -->
+  <view class="search-results" wx:if="{{results.length > 0 && searchTab === 'activity'}}">
+    <text class="result-count">找到 <text class="result-num">{{allResults.length}}</text> 个相关活动</text>
+    <view class="result-item fade-in-{{index}}" wx:for="{{results}}" wx:key="id" bindtap="onResultTap" data-id="{{item.id}}">
+      <image class="result-img" src="{{item.cover}}" mode="aspectFill"></image>
+      <view class="result-info">
+        <text class="result-name text-ellipsis-2">{{item.name}}</text>
+        <view class="result-tags">
+          <text class="tag tag-brand" wx:if="{{item.type_name}}">{{item.type_name}}</text>
+          <text class="tag tag-outline" wx:if="{{item.is_free}}">免费</text>
+          <text class="tag tag-warm" wx:elif="{{!item.is_free}}">{{item.price_text}}</text>
+        </view>
+        <view class="result-loc"><image class="result-loc-icon" src="/images/icon-location-sm.png" mode="aspectFit"></image> {{item.location}}</view>
+      </view>
+    </view>
+    <view class="load-more" wx:if="{{hasMore && results.length > 0}}">上拉加载更多...</view>
+    <view class="load-more" wx:elif="{{!hasMore && results.length > 0}}">— 已加载全部 —</view>
+  </view>
+
+  <!-- 搜索结果 - 景点 -->
+  <view class="search-results" wx:if="{{results.length > 0 && searchTab === 'scenic'}}">
+    <text class="result-count">共 <text class="result-num">{{allResults.length}}</text> 个景点</text>
+    <view class="result-item result-scenic fade-in-{{index}}" wx:for="{{results}}" wx:key="id" bindtap="onResultTap" data-id="{{item.id}}">
+      <image class="result-img" wx:if="{{item.cover}}" src="{{item.cover}}" mode="aspectFill" lazy-load binderror="onImageError" data-index="{{index}}"></image>
+      <view class="result-img result-img-placeholder" wx:else>
+        <image class="result-img-placeholder-icon" src="/images/icon-mountain.png" mode="aspectFit"></image>
+      </view>
+      <view class="result-info">
+        <text class="result-name text-ellipsis">{{item.name}}</text>
+        <view class="result-tags">
+          <text class="tag tag-brand" wx:if="{{item.level}}">{{item.level}}级</text>
+          <text class="tag tag-outline" wx:if="{{item.ticket_type === 'free'}}">免费</text>
+          <text class="tag tag-warm" wx:elif="{{item.ticket_price}}">¥{{item.ticket_price}}</text>
+          <text class="tag tag-hint" wx:elif="{{item.ticket_note}}">{{item.ticket_note}}</text>
+        </view>
+        <text class="result-loc text-ellipsis" wx:if="{{item.description}}">{{item.description}}</text>
+      </view>
+    </view>
+    <view class="load-more" wx:if="{{hasMore && results.length > 0}}">上拉加载更多...</view>
+    <view class="load-more" wx:elif="{{!hasMore && results.length > 0}}">— 已加载全部 —</view>
+  </view>
+
+  <!-- 搜索中（无结果） -->
+  <view class="empty-state" wx:if="{{keyword && results.length === 0}}">
+    <view class="empty-icon-wrap">
+      <image class="empty-icon" src="/images/icon-search.png" mode="aspectFit"></image>
+    </view>
+    <text class="empty-state-title">未找到「{{keyword}}」相关内容</text>
+    <text class="empty-state-desc">换个关键词试试吧</text>
+  </view>
+
+  <!-- 返回顶部 -->
+  <view class="back-to-top {{showBackTop ? 'back-to-top-show' : ''}}" bindtap="onBackTop" hover-class="haptic">
+    <image class="back-to-top-arrow" src="/images/icon-up.png" mode="aspectFit"></image>
+  </view>
+</view>

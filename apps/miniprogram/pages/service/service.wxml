@@ -1,0 +1,130 @@
+<!-- 服务页 · 文旅服务 + 本地生活 · 对齐首页 UI 体系 -->
+<view class="container page-service {{themeClass}}">
+
+  <!-- ===== 沉浸式头部（对齐首页 index-hero） ===== -->
+  <view class="svc-hero" style="padding-top: calc(8rpx + {{statusBarHeight}}px);">
+    <view class="hero-pattern"></view>
+    <!-- 主标题 -->
+    <text class="svc-main">大理服务</text>
+    <!-- 副标题 -->
+    <text class="svc-sub">景点 · 美食 · 住宿 · 出行</text>
+    <!-- 底部操作行 -->
+    <view class="svc-bottom">
+      <view class="svc-quick-weather">
+        <image class="svc-quick-icon" src="/images/icon-weather.png" mode="aspectFit"></image>
+        <text>晴 26°C</text>
+      </view>
+      <view class="svc-quick-traffic">
+        <image class="svc-quick-icon" src="/images/icon-car.png" mode="aspectFit"></image>
+        <text>总体畅通</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- ===== 搜索栏（对齐首页 idx-search） ===== -->
+  <view class="svc-search" bindtap="onGoSearch" hover-class="haptic">
+    <image class="svc-search-icon" src="/images/icon-search.png" mode="aspectFit"></image>
+    <text class="svc-search-text">搜索景点、美食、住宿、商圈...</text>
+  </view>
+
+  <!-- ===== 分类快捷入口（对齐首页 idx-tabs） ===== -->
+  <scroll-view class="svc-tabs" scroll-x enhanced show-scrollbar="{{false}}">
+    <view class="svc-tab {{quickTab === 'scenic' ? 'tab-on' : ''}}" bindtap="onQuickTab" data-tab="scenic" hover-class="haptic"><image class="svc-tab-icon" src="/images/icon-mountain.png" mode="aspectFit"></image> 热门景点</view>
+    <view class="svc-tab {{quickTab === 'food'   ? 'tab-on' : ''}}" bindtap="onQuickTab" data-tab="food"   hover-class="haptic"><image class="svc-tab-icon" src="/images/icon-food.png" mode="aspectFit"></image> 美食推荐</view>
+    <view class="svc-tab {{quickTab === 'hotel'  ? 'tab-on' : ''}}" bindtap="onQuickTab" data-tab="hotel"  hover-class="haptic"><image class="svc-tab-icon" src="/images/icon-hotel.png" mode="aspectFit"></image> 特色住宿</view>
+    <view class="svc-tab {{quickTab === 'shop'   ? 'tab-on' : ''}}" bindtap="onQuickTab" data-tab="shop"   hover-class="haptic"><image class="svc-tab-icon" src="/images/icon-shopping.png" mode="aspectFit"></image> 商圈集市</view>
+    <view class="svc-tab {{quickTab === 'travel'  ? 'tab-on' : ''}}" bindtap="onQuickTab" data-tab="travel" hover-class="haptic"><image class="svc-tab-icon" src="/images/icon-bus.png" mode="aspectFit"></image> 出行服务</view>
+  </scroll-view>
+
+  <!-- ===== 内容区（滚动） ===== -->
+  <scroll-view class="svc-scroll" scroll-y enhanced show-scrollbar="{{false}}" scroll-top="{{scrollTop != null ? scrollTop : ''}}" bindscroll="onScroll">
+
+    <!-- ===== 热门景点（横向滚动） ===== -->
+    <view class="svc-section">
+      <view class="svc-sec-header">
+        <view class="svc-sec-title"><image class="svc-sec-title-icon" src="/images/icon-mountain.png" mode="aspectFit"></image> 热门景点</view>
+        <text class="svc-sec-more" bindtap="onViewAllScenic" hover-class="haptic">全部景点 ›</text>
+      </view>
+      <scroll-view class="svc-scenic-scroll" scroll-x enhanced show-scrollbar="{{false}}">
+        <view
+          class="scenic-card fade-in fade-in-{{index < 5 ? index + 1 : 5}}"
+          wx:for="{{scenicSpots}}"
+          wx:key="id"
+          wx:for-index="index"
+          bindtap="onScenicTap"
+          data-id="{{item.id}}"
+          hover-class="card-press"
+        >
+          <image class="scenic-img" src="{{item.cover}}" mode="aspectFill" lazy-load></image>
+          <view class="scenic-overlay">
+            <text class="scenic-name">{{item.name}}</text>
+            <text class="scenic-desc">{{item.desc}}</text>
+            <view class="scenic-tags">
+              <text>{{item.price}}</text>
+              <text>·</text>
+              <text>{{item.time}}</text>
+            </view>
+          </view>
+        </view>
+      </scroll-view>
+    </view>
+
+    <!-- ===== 本地生活 ===== -->
+    <view class="svc-section">
+      <view class="svc-sec-title"><image class="svc-sec-title-icon" src="/images/icon-dining.png" mode="aspectFit"></image> 本地生活</view>
+      <!-- Tab 切换（对齐首页 idx-tabs 胶囊样式） -->
+      <view class="svc-life-tabs" style="margin-top:var(--space-md);">
+        <view class="svc-life-tab {{lifeTab === 'food'  ? 'tab-on' : ''}}" bindtap="onLifeTab" data-tab="food"  hover-class="haptic">
+          <image class="svc-life-tab-icon" src="/images/icon-food.png" mode="aspectFit"></image><text>美食</text>
+        </view>
+        <view class="svc-life-tab {{lifeTab === 'hotel' ? 'tab-on' : ''}}" bindtap="onLifeTab" data-tab="hotel" hover-class="haptic">
+          <image class="svc-life-tab-icon" src="/images/icon-hotel.png" mode="aspectFit"></image><text>住宿</text>
+        </view>
+        <view class="svc-life-tab {{lifeTab === 'shop'  ? 'tab-on' : ''}}" bindtap="onLifeTab" data-tab="shop"  hover-class="haptic">
+          <image class="svc-life-tab-icon" src="/images/icon-shopping.png" mode="aspectFit"></image><text>商圈</text>
+        </view>
+      </view>
+
+      <!-- 空状态（对齐首页 empty-state） -->
+      <view class="empty-state" wx:if="{{localLife[lifeTab].length === 0}}">
+        <view class="empty-state-icon"><image src="/images/icon-empty-state.png" mode="aspectFit" style="width:88rpx;height:88rpx;"></image></view>
+        <text class="empty-state-title">暂无{{lifeTab === 'food' ? '美食' : lifeTab === 'hotel' ? '住宿' : '商圈'}}信息</text>
+        <text class="empty-state-desc">更多商家正在入驻中</text>
+      </view>
+
+      <!-- 列表卡片（对齐首页 act-card 风格） -->
+      <view
+        class="life-card fade-in fade-in-{{index < 6 ? index + 1 : 6}}"
+        wx:for="{{localLife[lifeTab]}}"
+        wx:key="id"
+        wx:for-item="item"
+        wx:for-index="index"
+        hover-class="card-press"
+      >
+        <image class="life-card-img" src="{{item.cover}}" mode="aspectFill" lazy-load></image>
+        <view class="life-card-body">
+          <view class="life-card-top">
+            <text class="life-card-name text-ellipsis">{{item.name}}</text>
+            <view class="life-card-rating" wx:if="{{item.rating}}">
+              <image class="rating-star" src="/images/icon-star.png" mode="aspectFit"></image>
+              <text class="rating-num">{{item.rating}}</text>
+            </view>
+          </view>
+          <view class="life-card-tags">
+            <text class="tag tag-outline">{{item.type}}</text>
+          </view>
+          <text class="life-card-price" wx:if="{{item.price}}">{{item.price}}</text>
+          <view class="life-card-loc" wx:if="{{item.location}}"><image class="life-card-loc-icon" src="/images/icon-location-sm.png" mode="aspectFit"></image> {{item.location}}</view>
+          <text class="life-card-desc text-ellipsis-2" wx:if="{{item.description}}">{{item.description}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="safe-bottom" style="height:60rpx;"></view>
+  </scroll-view>
+
+  <!-- 返回顶部 -->
+  <view class="back-to-top {{showBackTop ? 'back-to-top-show' : ''}}" bindtap="onBackTop" hover-class="haptic">
+    <image class="back-to-top-arrow" src="/images/icon-up.png" mode="aspectFit"></image>
+  </view>
+</view>

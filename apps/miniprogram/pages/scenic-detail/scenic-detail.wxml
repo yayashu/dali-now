@@ -1,0 +1,125 @@
+<view class="container page-scenic-detail {{themeClass}}">
+  <!-- 加载态 -->
+  <view class="loading-state" wx:if="{{loading}}">
+    <image class="loading-icon" src="/images/icon-hourglass.png" mode="aspectFit"></image>
+    <text class="loading-text">加载中...</text>
+  </view>
+
+  <block wx:elif="{{spot}}">
+    <scroll-view class="sd-scroll" scroll-y enhanced show-scrollbar="{{false}}">
+
+      <!-- ===== 图片画廊 ===== -->
+      <view class="sd-gallery" wx:if="{{images.length > 0}}">
+        <swiper class="sd-swiper" indicator-dots="{{images.length > 1}}" indicator-color="rgba(255,255,255,0.4)" indicator-active-color="#fff" autoplay circular bindchange="onGalleryChange">
+          <swiper-item wx:for="{{images}}" wx:key="*this">
+            <image class="sd-gallery-img" src="{{item}}" mode="aspectFill" bindtap="onPreviewImage" data-url="{{item}}"></image>
+          </swiper-item>
+        </swiper>
+        <view class="sd-gallery-count" wx:if="{{images.length > 1}}">
+          <text>{{galleryCurrent + 1}}/{{images.length}}</text>
+        </view>
+      </view>
+
+      <!-- ===== 基础信息卡 ===== -->
+      <view class="sd-info-card">
+        <view class="sd-name-row">
+          <text class="sd-name">{{spot.name}}</text>
+          <text class="sd-level" wx:if="{{spot.level}}">{{spot.levelText}}</text>
+        </view>
+
+        <view class="sd-meta-row">
+          <view class="sd-meta-item">
+            <image class="sd-meta-icon" src="/images/icon-ticket.png" mode="aspectFit"></image>
+            <text class="sd-meta-val {{spot.ticket_type === 'free' ? 'text-free' : ''}}">{{spot.priceText}}</text>
+          </view>
+          <view class="sd-meta-item">
+            <image class="sd-meta-icon" src="/images/icon-clock-sm.png" mode="aspectFit"></image>
+            <text class="sd-meta-val">{{spot.timeText}}</text>
+          </view>
+          <view class="sd-meta-item" wx:if="{{spot.best_season}}">
+            <image class="sd-meta-icon" src="/images/icon-season.png" mode="aspectFit"></image>
+            <text class="sd-meta-val">{{spot.best_season}}</text>
+          </view>
+        </view>
+
+        <!-- 半价提示 -->
+        <view class="sd-half-tip" wx:if="{{spot.half_price_note}}">
+          <view class="sd-half-tip-text"><image class="sd-tip-icon" src="/images/icon-tip.png" mode="aspectFit"></image> {{spot.half_price_note}}</view>
+        </view>
+
+        <view class="sd-tags" wx:if="{{spot.tags.length > 0}}">
+          <text class="tag tag-outline" wx:for="{{spot.tags}}" wx:key="*this">{{item}}</text>
+        </view>
+      </view>
+
+      <!-- ===== 详情介绍 ===== -->
+      <view class="sd-section" wx:if="{{spot.description}}">
+        <view class="sd-sec-title"><image class="sd-sec-title-icon" src="/images/icon-guide.png" mode="aspectFit"></image> 景区介绍</view>
+        <text class="sd-desc">{{spot.description}}</text>
+      </view>
+
+      <!-- ===== 游览贴士 ===== -->
+      <view class="sd-section" wx:if="{{spot.tips}}">
+        <view class="sd-sec-title"><image class="sd-sec-title-icon" src="/images/icon-tip.png" mode="aspectFit"></image> 游览贴士</view>
+        <text class="sd-desc">{{spot.tips}}</text>
+      </view>
+
+      <!-- ===== 建议游览时长 ===== -->
+      <view class="sd-section" wx:if="{{spot.suggested_time}}">
+        <view class="sd-sec-title"><image class="sd-sec-title-icon" src="/images/icon-time.png" mode="aspectFit"></image> 建议游览</view>
+        <text class="sd-desc">约 {{spot.suggested_time}} 小时</text>
+      </view>
+
+      <!-- ===== 配套设施 ===== -->
+      <view class="sd-section" wx:if="{{spot.facilities.length > 0}}">
+        <view class="sd-sec-title"><image class="sd-sec-title-icon" src="/images/icon-facilities.png" mode="aspectFit"></image> 配套设施</view>
+        <view class="sd-facility-list">
+          <text class="sd-facility-item" wx:for="{{spot.facilities}}" wx:key="*this">{{item}}</text>
+        </view>
+      </view>
+
+      <!-- ===== 注意事项 ===== -->
+      <view class="sd-section" wx:if="{{spot.notice}}">
+        <view class="sd-sec-title"><image class="sd-sec-title-icon" src="/images/icon-warning.png" mode="aspectFit"></image> 注意事项</view>
+        <text class="sd-desc">{{spot.notice}}</text>
+      </view>
+
+      <!-- ===== 交通指南 ===== -->
+      <view class="sd-section" wx:if="{{spot.transport}}">
+        <view class="sd-sec-title"><image class="sd-sec-title-icon" src="/images/icon-bus.png" mode="aspectFit"></image> 交通指南</view>
+        <text class="sd-desc">{{spot.transport}}</text>
+      </view>
+
+      <!-- ===== 联系信息 ===== -->
+      <view class="sd-section" wx:if="{{spot.address || spot.phone || spot.website}}">
+        <view class="sd-sec-title"><image class="sd-sec-title-icon" src="/images/icon-phone.png" mode="aspectFit"></image> 联系信息</view>
+        <view class="sd-contact-list">
+          <view class="sd-contact-item" wx:if="{{spot.address}}" bindtap="onCopyAddress" hover-class="haptic">
+            <image class="sd-contact-icon" src="/images/icon-location-sm.png" mode="aspectFit"></image>
+            <text class="sd-contact-text">{{spot.address}}</text>
+            <text class="sd-contact-action">复制</text>
+          </view>
+          <view class="sd-contact-item" wx:if="{{spot.phone}}" bindtap="onCallPhone" hover-class="haptic">
+            <image class="sd-contact-icon" src="/images/icon-phone.png" mode="aspectFit"></image>
+            <text class="sd-contact-text">{{spot.phone}}</text>
+            <text class="sd-contact-action">拨打</text>
+          </view>
+          <view class="sd-contact-item" wx:if="{{spot.website}}" bindtap="onCopyAddress" data-addr="{{spot.website}}" hover-class="haptic">
+            <image class="sd-contact-icon" src="/images/icon-web.png" mode="aspectFit"></image>
+            <text class="sd-contact-text">{{spot.website}}</text>
+            <text class="sd-contact-action">复制</text>
+          </view>
+        </view>
+      </view>
+
+      <view class="safe-bottom" style="height:160rpx;"></view>
+    </scroll-view>
+
+    <!-- ===== 底部操作栏 ===== -->
+    <view class="sd-bottom-bar" wx:if="{{spot.latitude && spot.longitude}}">
+      <view class="sd-bottom-btn sd-btn-nav" bindtap="onNavigate" hover-class="haptic">
+        <image class="sd-nav-icon" src="/images/icon-nav.png" mode="aspectFit"></image> 导航前往
+      </view>
+    </view>
+  </block>
+</view>

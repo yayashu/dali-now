@@ -1,0 +1,20 @@
+<!-- 管理员登录 -->
+<view class="container page-admin-login">
+  <view class="login-card">
+    <view class="login-logo"><image src="/images/icon-landmark.png" mode="aspectFit" style="width:64rpx;height:64rpx;"></image></view>
+    <text class="login-title">大理此刻 · 后台管理</text>
+    <text class="login-sub">景区管理 / 打卡点管理 / 活动管理</text>
+
+    <view class="form-group">
+      <text class="form-label">用户名</text>
+      <input class="form-input" placeholder="请输入管理员用户名" value="{{username}}" bindinput="onUsernameInput" />
+    </view>
+
+    <view class="form-group">
+      <text class="form-label">密码</text>
+      <input class="form-input" type="password" placeholder="请输入密码" value="{{password}}" bindinput="onPasswordInput" />
+    </view>
+
+    <button class="btn-primary btn-block" bindtap="onLogin" loading="{{loading}}" disabled="{{loading}}">登 录</button>
+  </view>
+</view>

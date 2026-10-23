@@ -1,0 +1,272 @@
+/* ============================================================
+   用户中心 · UI/UX 优化版
+   沉浸式头部 + 优雅卡片菜单
+   ============================================================ */
+.page-user {
+  background: var(--bg-page);
+  min-height: 100vh;
+}
+
+/* ── 禁闭提醒 ── */
+.ban-notice {
+  margin: 20rpx var(--space-lg);
+  padding: 24rpx 28rpx;
+  background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+  border-radius: 16rpx;
+  border-left: 8rpx solid #ff9800;
+  display: flex;
+  align-items: flex-start;
+  gap: 16rpx;
+  box-shadow: 0 2rpx 12rpx rgba(255,152,0,0.15);
+}
+.ban-notice-icon {
+  font-size: 40rpx;
+  line-height: 1.2;
+  flex-shrink: 0;
+}
+.ban-notice-body {
+  flex: 1;
+  min-width: 0;
+}
+.ban-notice-title {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #e65100;
+  display: block;
+  margin-bottom: 6rpx;
+}
+.ban-notice-desc {
+  font-size: 26rpx;
+  color: #bf360c;
+  line-height: 1.5;
+  display: block;
+}
+
+/* ── 头部 ── */
+.user-hero {
+  padding: 40rpx var(--space-lg) 50rpx;
+}
+.user-hero-inner {
+  position: relative;
+  z-index: 1;
+}
+
+/* 用户行 */
+.user-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 36rpx;
+}
+.user-avatar {
+  width: 110rpx;
+  height: 110rpx;
+  border-radius: 50%;
+  border: 4rpx solid rgba(255,255,255,0.35);
+  background: rgba(255,255,255,0.15);
+  flex-shrink: 0;
+}
+.user-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6rpx;
+  margin-left: 20rpx;
+}
+.user-name {
+  font-size: var(--text-xl);
+  font-weight: 700;
+  color: #fff;
+}
+.user-id {
+  font-size: var(--text-sm);
+  color: rgba(255,255,255,0.6);
+}
+.user-arr {
+  font-size: 36rpx;
+  color: rgba(255,255,255,0.5);
+  flex-shrink: 0;
+}
+
+/* 数据概览 */
+.user-stats {
+  display: flex;
+  align-items: center;
+  background: rgba(255,255,255,0.1);
+  border-radius: var(--radius-md);
+  padding: 20rpx 0;
+  backdrop-filter: blur(4rpx);
+}
+.user-stat {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4rpx;
+}
+.stat-divider {
+  width: 1rpx;
+  height: 40rpx;
+  background: rgba(255,255,255,0.15);
+}
+.stat-num {
+  font-size: 44rpx;
+  font-weight: 800;
+  color: #fff;
+}
+.stat-label {
+  font-size: var(--text-2xs);
+  color: rgba(255,255,255,0.65);
+}
+
+/* ── 菜单区 ── */
+.user-menu-section {
+  padding: var(--space-lg);
+  margin-top: -16rpx;
+  position: relative;
+  z-index: 2;
+}
+
+/* 菜单卡片 */
+.menu-card {
+  background: var(--bg-surface);
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--space-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-xs);
+}
+.menu-heading {
+  display: flex;
+  align-items: center;
+  padding: 20rpx var(--space-lg) 10rpx;
+  font-size: var(--text-xs);
+  color: var(--text-hint);
+  letter-spacing: 1rpx;
+}
+.menu-heading-icon {
+  width: 28rpx;
+  height: 28rpx;
+  margin-right: 8rpx;
+}
+.menu-item {
+  display: flex;
+  align-items: center;
+  padding: 22rpx var(--space-lg);
+  transition: background var(--duration-fast);
+}
+.menu-item:active {
+  background: var(--bg-page);
+}
+.menu-item:last-child {
+  border-bottom: none;
+}
+.menu-icon-text {
+  font-size: 36rpx;
+  width: 48rpx;
+  text-align: center;
+  flex-shrink: 0;
+}
+.menu-icon-img {
+  width: 44rpx;
+  height: 44rpx;
+  flex-shrink: 0;
+}
+.menu-label {
+  flex: 1;
+  font-size: var(--text-base);
+  color: var(--text-body);
+  margin-left: 12rpx;
+}
+.menu-arr {
+  font-size: 28rpx;
+  color: var(--text-hint);
+  flex-shrink: 0;
+}
+.menu-badge {
+  background: var(--color-danger);
+  color: #fff;
+  font-size: var(--text-2xs);
+  min-width: 36rpx;
+  height: 36rpx;
+  line-height: 36rpx;
+  text-align: center;
+  border-radius: 18rpx;
+  padding: 0 10rpx;
+  flex-shrink: 0;
+  margin-right: 8rpx;
+}
+.menu-dot {
+  width: 16rpx;
+  height: 16rpx;
+  background: var(--color-danger);
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-right: 8rpx;
+}
+.menu-tag {
+  font-size: var(--text-xs);
+  color: var(--text-hint);
+  flex-shrink: 0;
+  margin-right: 8rpx;
+  background: var(--bg-page);
+  padding: 4rpx 12rpx;
+  border-radius: var(--radius-xs);
+}
+
+/* ── 会员预览 ── */
+.vip-card {
+  display: flex;
+  align-items: center;
+  margin: 0 var(--space-lg);
+  padding: 24rpx;
+  background: linear-gradient(135deg, var(--color-warm-bg), rgba(245,201,106,0.12));
+  border-radius: var(--radius-lg);
+  border: 1rpx dashed var(--color-warm);
+  gap: 16rpx;
+}
+.vip-icon {
+  width: 44rpx;
+  height: 44rpx;
+  flex-shrink: 0;
+}
+.vip-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4rpx;
+}
+.vip-title {
+  font-size: var(--text-sm);
+  color: #8b6914;
+  font-weight: 600;
+}
+.vip-desc {
+  font-size: var(--text-2xs);
+  color: rgba(139,105,20,0.6);
+}
+.vip-arr {
+  font-size: 28rpx;
+  color: var(--color-warm);
+  flex-shrink: 0;
+}
+
+/* ── 退出登录 ── */
+.logout-section {
+  padding: 20rpx var(--space-lg) 0;
+}
+.logout-btn {
+  width: 100%;
+  height: 88rpx;
+  line-height: 88rpx;
+  background: var(--bg-surface);
+  color: #e74c3c;
+  border-radius: var(--radius-lg);
+  font-size: 30rpx;
+  font-weight: 500;
+  border: none;
+  padding: 0;
+  box-shadow: var(--shadow-xs);
+}
+.logout-btn::after {
+  border: none;
+}
+

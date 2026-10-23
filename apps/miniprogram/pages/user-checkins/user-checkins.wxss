@@ -1,0 +1,46 @@
+.page-sub { background: #f5f5f5; min-height: 100vh; }
+
+.checkin-list {
+  padding-top: 10rpx;
+}
+
+.checkin-item {
+  display: flex;
+  align-items: center;
+  padding: 20rpx;
+}
+
+.checkin-cover {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 12rpx;
+  flex-shrink: 0;
+  background: #f0f0f0;
+}
+
+.checkin-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin-left: 20rpx;
+  overflow: hidden;
+}
+
+.checkin-name {
+  font-size: var(--font-md);
+  color: var(--text-primary);
+  margin-bottom: 6rpx;
+}
+
+.checkin-address {
+  margin-bottom: 6rpx;
+}
+
+.checkin-date {
+}
+
+.checkin-arrow {
+  flex-shrink: 0;
+  margin-left: 10rpx;
+  font-size: 36rpx;
+}

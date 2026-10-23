@@ -1,0 +1,67 @@
+<!-- 编辑个人信息 -->
+<view class="container page-profile {{themeClass}}">
+
+  <!-- ===== 沉浸式头部 ===== -->
+  <view class="profile-hero" style="padding-top: calc({{statusBarHeight}}px);">
+    <view class="hero-pattern"></view>
+    <view class="hero-nav-row">
+      <view class="nav-back-btn" bindtap="onNavBack" hover-class="nav-back-active">
+        <text class="nav-back-arrow">‹</text>
+      </view>
+      <text class="nav-title">编辑个人信息</text>
+    </view>
+  </view>
+
+  <!-- ===== 内容面板 ===== -->
+  <view class="profile-panel">
+
+    <!-- 头像区域 -->
+    <view class="avatar-section" bindtap="onChangeAvatar">
+      <view class="edit-avatar-wrap">
+        <image class="edit-avatar" src="{{avatar || '/images/avatar-default.png'}}" mode="aspectFill"></image>
+        <view class="avatar-camera-overlay">
+          <image class="avatar-camera-icon" src="/images/icon-camera.png" mode="aspectFit" style="width:40rpx;height:40rpx;"></image>
+        </view>
+      </view>
+      <text class="avatar-hint">点击更换头像</text>
+    </view>
+
+    <!-- 昵称区域 -->
+    <view class="edit-section">
+      <text class="edit-label">昵称</text>
+      <view class="edit-input-row">
+        <input 
+          class="edit-input" 
+          maxlength="16" 
+          placeholder="请输入昵称" 
+          value="{{nickname}}"
+          bindinput="onNicknameInput"
+        />
+        <view class="random-btn" bindtap="onRandomNickname" hover-class="random-btn-active">
+          <image class="random-icon" src="/images/icon-random.png" mode="aspectFit" style="width:32rpx;height:32rpx;"></image>
+          <text class="random-text">换一个</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 手机号区域 -->
+    <view class="edit-section">
+      <text class="edit-label">手机号</text>
+      <input 
+        class="edit-input edit-input-full" 
+        type="number" 
+        maxlength="11" 
+        placeholder="请输入手机号码" 
+        value="{{phone}}"
+        bindinput="onPhoneInput"
+      />
+    </view>
+
+    <!-- 保存按钮 -->
+    <view class="save-area">
+      <button class="save-btn" bindtap="onSave">保存</button>
+    </view>
+
+  </view>
+
+</view>

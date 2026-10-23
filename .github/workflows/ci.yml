@@ -1,0 +1,54 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  server-node:
+    name: 服务端 Node.js 语法检查
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: services/server
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - name: 安装依赖
+        run: npm ci
+      - name: JS 语法检查
+        run: |
+          status=0
+          while IFS= read -r f; do
+            node --check "$f" || status=1
+          done < <(git ls-files '*.js')
+          exit $status
+
+  server-python:
+    name: 服务端 Python 语法检查
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+      - name: 编译检查
+        run: python -m compileall -q services/server
+
+  admin-panel:
+    name: 管理后台构建
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/admin-panel
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - run: npm ci
+      - run: npm run build

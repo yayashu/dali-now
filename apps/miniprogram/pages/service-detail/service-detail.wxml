@@ -1,0 +1,90 @@
+<!-- 便民服务详情页 -->
+<view class="container page-svc-detail {{themeClass}}">
+
+  <!-- 加载中 -->
+  <view class="loading-state" wx:if="{{loading}}">
+    <view class="loading-spinner"></view>
+    <text class="loading-text">加载中...</text>
+  </view>
+
+  <block wx:else>
+
+    <!-- ===== 实时天气 ===== -->
+    <view class="svc-detail-section" wx:if="{{type === 'weather'}}">
+      <view class="svc-detail-hero weather-hero">
+        <image class="svc-detail-hero-icon" src="{{weather && weather.icon ? weather.icon : '/images/icon-weather-forecast.png'}}" mode="aspectFit"></image>
+        <text class="svc-detail-hero-temp" wx:if="{{weather}}">{{weather.temp}}°C</text>
+        <text class="svc-detail-hero-desc">{{weather ? weather.desc : '大理天气'}}</text>
+      </view>
+      <view class="svc-detail-card" wx:if="{{weather}}">
+        <view class="svc-detail-row">
+          <text class="svc-detail-label">湿度</text>
+          <text class="svc-detail-value">{{weather.humidity || '--'}}%</text>
+        </view>
+        <view class="svc-detail-row">
+          <text class="svc-detail-label">风力</text>
+          <text class="svc-detail-value">{{weather.wind || '--'}}</text>
+        </view>
+        <view class="svc-detail-row">
+          <text class="svc-detail-label">紫外线</text>
+          <text class="svc-detail-value">{{weather.uv || '--'}}</text>
+        </view>
+      </view>
+      <view class="empty-state" wx:else>
+        <image class="empty-state-icon" src="/images/icon-weather-forecast.png" mode="aspectFit"></image>
+        <text class="empty-state-title">天气数据加载中</text>
+        <text class="empty-state-desc">请稍后再试</text>
+      </view>
+    </view>
+
+    <!-- ===== 交通路况 ===== -->
+    <view class="svc-detail-section" wx:if="{{type === 'traffic'}}">
+      <view class="svc-detail-hero traffic-hero">
+        <image class="svc-detail-hero-icon" src="/images/icon-traffic.png" mode="aspectFit"></image>
+        <text class="svc-detail-hero-title">大理交通路况</text>
+        <text class="svc-detail-hero-sub">实时路况信息</text>
+      </view>
+      <view class="svc-detail-card" wx:if="{{traffic.length > 0}}">
+        <view class="traffic-item" wx:for="{{traffic}}" wx:key="index">
+          <view class="traffic-status {{item.status === '畅通' ? 'status-green' : item.status === '缓行' ? 'status-yellow' : 'status-red'}}">
+            <text>{{item.status}}</text>
+          </view>
+          <view class="traffic-info">
+            <text class="traffic-road">{{item.road || item.name}}</text>
+            <text class="traffic-desc" wx:if="{{item.desc}}">{{item.desc}}</text>
+          </view>
+        </view>
+      </view>
+      <view class="empty-state" wx:else>
+        <image class="empty-state-icon" src="/images/icon-traffic.png" mode="aspectFit"></image>
+        <text class="empty-state-title">暂无路况数据</text>
+      </view>
+    </view>
+
+    <!-- ===== 出行查询 ===== -->
+    <view class="svc-detail-section" wx:if="{{type === 'bus'}}">
+      <view class="svc-detail-hero bus-hero">
+        <image class="svc-detail-hero-icon" src="/images/icon-bus.png" mode="aspectFit"></image>
+        <text class="svc-detail-hero-title">出行查询</text>
+        <text class="svc-detail-hero-sub">大理公共交通线路</text>
+      </view>
+      <view class="svc-detail-card" wx:if="{{busRoutes.length > 0}}">
+        <view class="bus-item" wx:for="{{busRoutes}}" wx:key="index" bindtap="onBusDetail" data-item="{{item}}">
+          <view class="bus-num">{{item.route || item.name}}</view>
+          <view class="bus-info">
+            <text class="bus-stations">{{item.from}} → {{item.to}}</text>
+            <text class="bus-time" wx:if="{{item.time}}">首末班: {{item.time}}</text>
+          </view>
+          <text class="menu-arr">›</text>
+        </view>
+      </view>
+      <view class="empty-state" wx:else>
+        <image class="empty-state-icon" src="/images/icon-bus.png" mode="aspectFit"></image>
+        <text class="empty-state-title">暂无出行线路数据</text>
+      </view>
+    </view>
+
+  </block>
+
+  <view class="safe-bottom" style="height:40rpx;"></view>
+</view>

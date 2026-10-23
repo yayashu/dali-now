@@ -1,0 +1,209 @@
+<!-- 现场发文页 — 沉浸式头部重构 -->
+<view class="container page-live-post {{themeClass}}">
+
+  <!-- ===== 沉浸式头部（自定义导航，无分割线） ===== -->
+  <view class="post-hero" style="padding-top: calc({{statusBarHeight}}px);">
+    <view class="hero-pattern"></view>
+    <!-- 自定义导航行：返回按钮 + 标题 -->
+    <view class="hero-nav-row">
+      <view class="nav-back-btn" bindtap="onNavBack" hover-class="nav-back-active">
+        <text class="nav-back-arrow">‹</text>
+      </view>
+      <text class="nav-title">发布现场动态</text>
+    </view>
+    <text class="post-slogan-sub">真实在场 · 即时纪实 · 氛围共享</text>
+    <view class="hero-bottom-bar">
+      <view class="verify-badge {{verified ? 'verify-ok' : 'verify-checking'}}">
+        <image class="verify-icon" src="{{verified ? '/images/icon-check-small.png' : '/images/icon-hourglass.png'}}" mode="aspectFit"></image>
+        <text>{{verified ? '核验通过' : '核验中'}}</text>
+      </view>
+      <view class="post-user-meta" wx:if="{{mode === 'quick'}}">
+        <image class="post-user-avatar" src="/images/avatar-default.png" mode="aspectFill"></image>
+        <view class="post-user-info">
+          <view class="post-user-name"><image class="user-name-pin-icon" src="/images/icon-location-sm.png" mode="aspectFit"></image> 我在现场</view>
+          <text class="post-user-time">此刻 · {{currentTime}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- ===== 统一内容面板（头部下方，无缝衔接） ===== -->
+  <view class="post-panel">
+
+    <!-- 极速状态模式 -->
+    <view wx:if="{{mode === 'quick'}}" class="quick-mode">
+      <!-- 内容输入 -->
+      <view class="form-row">
+        <view class="form-label-row">
+          <text class="form-label">这一刻的心情</text>
+          <text class="form-label-tip" wx:if="{{defaultText}}">已根据你的位置自动生成文案</text>
+        </view>
+        <textarea class="form-textarea quick-textarea"
+          placeholder="记录下此刻的精彩瞬间..."
+          value="{{content}}"
+          bindinput="onContentInput"
+          maxlength="500"
+          auto-height>
+        </textarea>
+        <text class="char-count">{{content.length}}/500</text>
+      </view>
+
+      <!-- 图片上传 -->
+      <view class="form-row">
+        <text class="form-label">添加图片</text>
+        <view class="media-upload">
+          <view class="media-item" wx:for="{{mediaList}}" wx:key="index" bindtap="onPreviewMedia" data-index="{{index}}">
+            <image class="media-img" src="{{item.url || item.path}}" mode="aspectFill"></image>
+            <image class="media-remove" catchtap="onRemoveMedia" data-index="{{index}}" src="/images/icon-close.png" mode="aspectFit"></image>
+          </view>
+          <view class="media-add" wx:if="{{mediaList.length < 9}}" bindtap="onAddMedia">
+            <image src="/images/icon-add-img.png" mode="aspectFit"></image>
+            <text>{{mediaList.length === 0 ? '拍照/相册' : ''}}</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 地理位置 -->
+      <view class="form-row form-row-tap" bindtap="onSelectLocation">
+        <text class="form-label">地理位置</text>
+        <view class="form-value-wrap">
+          <text class="{{selectedLocation ? '' : 'form-placeholder'}}">
+            {{selectedLocation || (locating ? '正在获取位置...' : '点击选择位置')}}
+          </text>
+          <image src="/images/icon-location-sm.png" mode="aspectFit"></image>
+        </view>
+      </view>
+
+      <!-- 关联活动 -->
+      <view class="form-row form-row-tap" bindtap="onSelectActivity">
+        <text class="form-label">关联活动</text>
+        <view class="form-value-wrap">
+          <text class="{{linkedActivity ? '' : 'form-placeholder'}}">
+            {{linkedActivity || '选择您正在参与的活动'}}
+          </text>
+          <image src="/images/icon-arrow-right.png" mode="aspectFit"></image>
+        </view>
+      </view>
+
+      <!-- 关联打卡点 -->
+      <view class="form-row form-row-tap" bindtap="onSelectPoint">
+        <text class="form-label">关联打卡点</text>
+        <view class="form-value-wrap">
+          <text class="{{linkedPoint ? '' : 'form-placeholder'}}">
+            {{linkedPoint || '选择您所在的打卡点位'}}
+          </text>
+          <image src="/images/icon-arrow-right.png" mode="aspectFit"></image>
+        </view>
+      </view>
+
+      <!-- 发布按钮 -->
+      <view class="publish-section">
+        <view class="btn-accent btn-block {{canPublish && !publishing ? '' : 'btn-disabled'}}" bindtap="onQuickPublish">
+          {{publishing ? '发布中...' : '立即发布「我在现场」'}}
+        </view>
+      </view>
+    </view>
+
+    <!-- 模板创作模式 -->
+    <view wx:if="{{mode === 'template'}}" class="content-mode">
+      <!-- 模板选择 -->
+      <view class="template-section">
+        <text class="section-label">选择发文模板</text>
+        <scroll-view class="template-scroll" scroll-x show-scrollbar="{{false}}">
+          <view class="template-item {{selectedTemplate === 'sunset' ? 'template-selected' : ''}}"
+            bindtap="onSelectTemplate" data-template="sunset">
+            <image src="/images/template-sunset.png" mode="aspectFill"></image>
+            <text>洱海日落</text>
+          </view>
+          <view class="template-item {{selectedTemplate === 'ancient' ? 'template-selected' : ''}}"
+            bindtap="onSelectTemplate" data-template="ancient">
+            <image src="/images/template-ancient.png" mode="aspectFill"></image>
+            <text>古城漫步</text>
+          </view>
+          <view class="template-item {{selectedTemplate === 'tea' ? 'template-selected' : ''}}"
+            bindtap="onSelectTemplate" data-template="tea">
+            <image src="/images/template-tea.png" mode="aspectFill"></image>
+            <text>三道茶香</text>
+          </view>
+          <view class="template-item {{selectedTemplate === 'cloud' ? 'template-selected' : ''}}"
+            bindtap="onSelectTemplate" data-template="cloud">
+            <image src="/images/template-cloud.png" mode="aspectFill"></image>
+            <text>苍山云海</text>
+          </view>
+        </scroll-view>
+      </view>
+
+      <!-- 文字内容 -->
+      <view class="form-row">
+        <text class="form-label">分享内容</text>
+        <textarea class="form-textarea"
+          placeholder="记录下此刻的精彩瞬间..."
+          value="{{content}}"
+          bindinput="onContentInput"
+          maxlength="500"
+          auto-height>
+        </textarea>
+        <text class="char-count">{{content.length}}/500</text>
+      </view>
+
+      <!-- 图片上传 -->
+      <view class="form-row">
+        <text class="form-label">添加素材</text>
+        <view class="media-upload">
+          <view class="media-item" wx:for="{{mediaList}}" wx:key="index" bindtap="onPreviewMedia" data-index="{{index}}">
+            <image class="media-img" src="{{item.url || item.path}}" mode="aspectFill"></image>
+            <image class="media-remove" catchtap="onRemoveMedia" data-index="{{index}}" src="/images/icon-close.png" mode="aspectFit"></image>
+          </view>
+          <view class="media-add" wx:if="{{mediaList.length < 9}}" bindtap="onAddMedia">
+            <image src="/images/icon-add-img.png" mode="aspectFit"></image>
+            <text>{{mediaList.length === 0 ? '添加图片' : ''}}</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 地理位置 -->
+      <view class="form-row form-row-tap" bindtap="onSelectLocation">
+        <text class="form-label">地理位置</text>
+        <view class="form-value-wrap">
+          <text class="{{selectedLocation ? '' : 'form-placeholder'}}">
+            {{selectedLocation || '自动获取当前位置'}}
+          </text>
+          <image src="/images/icon-location-sm.png" mode="aspectFit"></image>
+        </view>
+      </view>
+
+      <!-- 关联活动 -->
+      <view class="form-row form-row-tap" bindtap="onSelectActivity">
+        <text class="form-label">关联活动</text>
+        <view class="form-value-wrap">
+          <text class="{{linkedActivity ? '' : 'form-placeholder'}}">
+            {{linkedActivity || '选择您正在参与的活动'}}
+          </text>
+          <image src="/images/icon-arrow-right.png" mode="aspectFit"></image>
+        </view>
+      </view>
+
+      <!-- 关联打卡点 -->
+      <view class="form-row form-row-tap" bindtap="onSelectPoint">
+        <text class="form-label">关联打卡点</text>
+        <view class="form-value-wrap">
+          <text class="{{linkedPoint ? '' : 'form-placeholder'}}">
+            {{linkedPoint || '选择您所在的打卡点位'}}
+          </text>
+          <image src="/images/icon-arrow-right.png" mode="aspectFit"></image>
+        </view>
+      </view>
+
+      <!-- 发布按钮 -->
+      <view class="publish-section">
+        <view class="btn-primary btn-block {{canPublish && !publishing ? '' : 'btn-disabled'}}" bindtap="onPublish">
+          {{publishing ? '发布中...' : '发布到活动现场广场'}}
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 测试用Canvas -->
+  <canvas type="2d" id="testCanvas" style="width:200px;height:200px;"></canvas>
+
+</view>

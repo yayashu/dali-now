@@ -1,0 +1,46 @@
+<view class="container page-sub {{themeClass}}">
+  <!-- 加载中 -->
+  <view wx:if="{{loading}}" class="load-more">
+    <text class="text-light">加载中...</text>
+  </view>
+
+  <!-- 空状态 -->
+  <view wx:elif="{{!checkinList.length}}" class="empty-state" style="padding-top: 200rpx;">
+    <image src="/images/empty-fav.png" style="width:200rpx;height:200rpx;opacity:0.5;" mode="aspectFit"></image>
+    <text class="text-light mt-20">暂无打卡记录</text>
+    <text class="text-light text-sm">快去官方机位打卡记录你的大理之旅吧</text>
+  </view>
+
+  <!-- 打卡列表 -->
+  <view wx:else class="checkin-list">
+    <view
+      wx:for="{{checkinList}}"
+      wx:key="id"
+      class="checkin-item card"
+      data-point-id="{{item.checkin_id}}"
+      bindtap="onTapCheckin"
+    >
+      <image
+        wx:if="{{item.pointCover}}"
+        class="checkin-cover"
+        src="{{item.pointCover}}"
+        mode="aspectFill"
+      />
+      <view class="checkin-info">
+        <text class="checkin-name text-bold">{{item.pointName}}</text>
+        <text class="checkin-address text-sm text-light">{{item.pointAddress}}</text>
+        <text class="checkin-date text-xs text-light">打卡时间：{{item.checkinDate}}</text>
+      </view>
+      <view class="checkin-arrow">
+        <text class="text-light">›</text>
+      </view>
+    </view>
+    <view class="load-more" wx:if="{{hasMore && checkinList.length > 0}}">上拉加载更多...</view>
+    <view class="load-more" wx:elif="{{!hasMore && checkinList.length > 0}}">— 已加载全部 —</view>
+  </view>
+
+  <!-- 返回顶部 -->
+  <view class="back-to-top {{showBackTop ? 'back-to-top-show' : ''}}" bindtap="onBackTop" hover-class="haptic">
+    <image class="back-to-top-arrow" src="/images/icon-up.png" mode="aspectFit"></image>
+  </view>
+</view>

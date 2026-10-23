@@ -1,0 +1,31 @@
+{
+  "name": "dali-now-server",
+  "version": "1.0.0",
+  "description": "大理此刻 - 后端API服务",
+  "keywords": [
+    "dali",
+    "tourism",
+    "travel",
+    "wechat",
+    "miniprogram",
+    "express",
+    "flask",
+    "mysql",
+    "open-source"
+  ],
+  "main": "app.js",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "start": "node app.js",
+    "dev": "node app.js",
+    "init-db": "node scripts/init-db.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "express": "^4.18.0",
+    "mysql2": "^3.9.0"
+  }
+}

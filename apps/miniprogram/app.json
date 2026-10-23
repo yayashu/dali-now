@@ -1,0 +1,93 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/activity-detail/activity-detail",
+    "pages/checkin/checkin",
+    "pages/checkin-detail/checkin-detail",
+    "pages/checkin-photos/checkin-photos",
+    "pages/live/live",
+    "pages/live-post/live-post",
+    "pages/live-square/live-square",
+    "pages/service/service",
+    "pages/scenic-detail/scenic-detail",
+    "pages/community/community",
+    "pages/community-detail/community-detail",
+    "pages/user/user",
+    "pages/user-profile/user-profile",
+    "pages/user-activities/user-activities",
+    "pages/user-posts/user-posts",
+    "pages/user-favorites/user-favorites",
+    "pages/booking/booking",
+    "pages/booking-confirm/booking-confirm",
+    "pages/search/search",
+    "pages/user-checkins/user-checkins",
+    "pages/submit-checkin/submit-checkin",
+    "pages/submit-activity/submit-activity",
+    "pages/register/register",
+    "pages/about/about",
+    "pages/share-poster/share-poster",
+    "pages/admin/login/login",
+    "pages/admin/scenic-spots/list/list",
+    "pages/admin/scenic-spots/edit/edit"
+  ],
+  "window": {
+    "backgroundTextStyle": "dark",
+    "navigationBarBackgroundColor": "#1a6b4b",
+    "navigationBarTitleText": "大理此刻",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#f5f5f5"
+  },
+  "tabBar": {
+    "color": "#999999",
+    "selectedColor": "#1a6b4b",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "今日活动",
+        "iconPath": "images/tab/activity.png",
+        "selectedIconPath": "images/tab/activity-active.png"
+      },
+      {
+        "pagePath": "pages/checkin/checkin",
+        "text": "官方打卡",
+        "iconPath": "images/tab/checkin.png",
+        "selectedIconPath": "images/tab/checkin-active.png"
+      },
+      {
+        "pagePath": "pages/live/live",
+        "text": "我在现场",
+        "iconPath": "images/tab/live.png",
+        "selectedIconPath": "images/tab/live-active.png"
+      },
+      {
+        "pagePath": "pages/service/service",
+        "text": "服务",
+        "iconPath": "images/tab/service.png",
+        "selectedIconPath": "images/tab/service-active.png"
+      },
+      {
+        "pagePath": "pages/user/user",
+        "text": "我的",
+        "iconPath": "images/tab/user.png",
+        "selectedIconPath": "images/tab/user-active.png"
+      }
+    ]
+  },
+  "permission": {
+    "scope.userLocation": {
+      "desc": "你的位置信息将用于展示附近的活动和打卡点位"
+    },
+    "scope.writePhotosAlbum": {
+      "desc": "保存分享海报到你的相册"
+    }
+  },
+  "requiredPrivateInfos": [
+    "getLocation",
+    "chooseLocation"
+  ],
+  "requiredBackgroundModes": [],
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

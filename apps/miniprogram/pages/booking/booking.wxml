@@ -1,0 +1,73 @@
+<!-- 预约报名页 -->
+<view class="container page-booking {{themeClass}}">
+  <view class="booking-header">
+    <text class="booking-title">{{isFree ? '免费预约' : '活动报名'}}</text>
+    <text class="booking-activity">{{activityName}}</text>
+  </view>
+
+  <!-- 报名信息确认 -->
+  <view class="card">
+    <view class="section-title">报名信息</view>
+
+    <view class="form-group">
+      <text class="form-label">姓名</text>
+      <input class="form-input" placeholder="请输入真实姓名" value="{{formData.name}}" bindinput="onInput" data-field="name" />
+    </view>
+
+    <view class="form-group">
+      <text class="form-label">手机号</text>
+      <input class="form-input" type="number" placeholder="请输入手机号" value="{{formData.phone}}" bindinput="onInput" data-field="phone" maxlength="11" />
+    </view>
+
+    <view class="form-group">
+      <text class="form-label">人数</text>
+      <view class="counter">
+        <view class="counter-btn {{formData.count <= 1 ? 'counter-disabled' : ''}}" bindtap="onDecrease">−</view>
+        <text class="counter-value">{{formData.count}}</text>
+        <view class="counter-btn" bindtap="onIncrease">+</view>
+      </view>
+    </view>
+
+    <view class="form-group" wx:if="{{!isFree}}">
+      <text class="form-label">费用</text>
+      <text class="form-value text-accent text-bold">¥{{price}}/人 × {{formData.count}}人 = ¥{{price * formData.count}}</text>
+    </view>
+  </view>
+
+  <!-- 活动须知 -->
+  <view class="card">
+    <view class="section-title">活动须知</view>
+    <view class="notice-list">
+      <view class="notice-item">
+        <text class="notice-dot">•</text>
+        <text>请提前10分钟到达活动现场</text>
+      </view>
+      <view class="notice-item">
+        <text class="notice-dot">•</text>
+        <text>凭电子凭证核销入场</text>
+      </view>
+      <view class="notice-item">
+        <text class="notice-dot">•</text>
+        <text>活动开始前1小时将收到消息提醒</text>
+      </view>
+    </view>
+
+    <view class="agreement-row" bindtap="onToggleAgree">
+      <view class="checkbox {{agreed ? 'checkbox-checked' : ''}}">
+        <image wx:if="{{agreed}}" src="/images/icon-check-white.png" mode="aspectFit"></image>
+      </view>
+      <text>我已阅读并同意<text class="text-primary">《活动参与须知》</text></text>
+    </view>
+  </view>
+
+  <!-- 底部按钮 -->
+  <view class="bottom-fixed safe-bottom">
+    <view class="total-row" wx:if="{{!isFree}}">
+      <text class="total-label">合计</text>
+      <text class="total-price">¥{{price * formData.count}}</text>
+    </view>
+    <view class="btn-primary btn-block {{canSubmit ? '' : 'btn-disabled'}}" bindtap="onSubmit">
+      {{isFree ? '确认预约' : '确认支付 ¥' + (price * formData.count)}}
+    </view>
+  </view>
+</view>

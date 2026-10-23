@@ -1,0 +1,228 @@
+/* 发现新打卡点 - 提交表单 */
+.page-submit {
+  background: var(--bg-page);
+  min-height: 100vh;
+}
+
+/* 头部 */
+.submit-hero {
+  padding: 48rpx var(--space-lg) 40rpx;
+}
+.submit-hero-inner {
+  padding-top: 20rpx;
+}
+.submit-hero-title {
+  display: block;
+  font-size: var(--text-2xl);
+  font-weight: 700;
+  color: #fff;
+}
+.submit-hero-desc {
+  display: block;
+  font-size: var(--text-sm);
+  color: rgba(255,255,255,0.75);
+  margin-top: 8rpx;
+}
+
+/* 表单 */
+.submit-form {
+  padding: 24rpx 0;
+}
+
+/* ====== 表单组（卡片式分组，每个字段用独立卡片） ====== */
+.form-group {
+  display: flex;
+  align-items: center;
+  padding: 24rpx var(--space-md);
+  margin: 16rpx var(--space-md);
+  background: #fafbfc;
+  border-radius: var(--radius-lg);
+  border: 2rpx solid transparent;
+  transition: border-color 0.2s;
+}
+.form-group:last-child {
+  margin-bottom: 16rpx;
+}
+.form-group-vertical {
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* 标签 */
+.form-label {
+  display: flex;
+  align-items: center;
+  font-size: 28rpx;
+  color: var(--text-primary);
+  font-weight: 600;
+  width: 170rpx;
+  flex-shrink: 0;
+  min-height: 72rpx;
+}
+.form-label.required::before {
+  content: '*';
+  color: #e74c3c;
+  margin-right: 6rpx;
+  font-weight: 700;
+}
+.form-group-vertical .form-label {
+  width: 100%;
+  margin-bottom: 16rpx;
+  min-height: auto;
+}
+
+/* 输入框 - 统一白底+边框样式，清晰可辨 */
+.form-input {
+  flex: 1;
+  height: 72rpx;
+  font-size: 28rpx;
+  color: var(--text-primary);
+  background: #fff;
+  border: 2rpx solid #e5e7eb;
+  border-radius: var(--radius-md);
+  padding: 0 20rpx;
+  box-sizing: border-box;
+}
+.form-input:focus {
+  border-color: #1a6b4b;
+  background: #f9fdfb;
+}
+
+/* 可点击的伪输入框（位置选择、日期选择） */
+.form-input-tap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex: 1;
+  height: 72rpx;
+  background: #fff;
+  border: 2rpx solid #e5e7eb;
+  border-radius: var(--radius-md);
+  padding: 0 20rpx;
+  box-sizing: border-box;
+}
+.form-value {
+  color: var(--text-primary);
+  font-size: 28rpx;
+}
+.form-placeholder {
+  color: #9ca3af;
+  font-size: 28rpx;
+}
+.form-arr {
+  color: #9ca3af;
+  font-size: 36rpx;
+  margin-left: 16rpx;
+}
+
+/* 文本域 */
+.form-textarea {
+  width: 100%;
+  min-height: 160rpx;
+  font-size: 28rpx;
+  color: var(--text-primary);
+  background: #fff;
+  border: 2rpx solid #e5e7eb;
+  border-radius: var(--radius-md);
+  padding: 20rpx;
+  box-sizing: border-box;
+  line-height: 1.6;
+}
+.form-textarea:focus {
+  border-color: #1a6b4b;
+  background: #f9fdfb;
+}
+
+/* 类型选择 */
+.form-radio-group {
+  display: flex;
+  gap: 16rpx;
+}
+.form-radio {
+  padding: 16rpx 32rpx;
+  border-radius: 36rpx;
+  font-size: 28rpx;
+  color: #6b7280;
+  background: #fff;
+  border: 2rpx solid #e5e7eb;
+  transition: all 0.2s;
+}
+.form-radio.active {
+  color: #1a6b4b;
+  background: #edf7f2;
+  border-color: #1a6b4b;
+  font-weight: 600;
+}
+
+/* 图片上传 */
+.upload-area {
+  width: 220rpx;
+  height: 220rpx;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: #fff;
+}
+.upload-preview {
+  width: 100%;
+  height: 100%;
+}
+.upload-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 2rpx dashed #c4c4c4;
+  border-radius: var(--radius-lg);
+  background: #fafbfc;
+}
+.upload-icon {
+  width: 96rpx;
+  height: 96rpx;
+}
+.upload-text {
+  font-size: 24rpx;
+  color: #9ca3af;
+  margin-top: 10rpx;
+}
+
+/* 提示 */
+.submit-notice {
+  display: flex;
+  align-items: center;
+  padding: 20rpx var(--space-md);
+  margin: 16rpx var(--space-md);
+  background: rgba(26,107,75,0.06);
+  border-radius: var(--radius-lg);
+}
+.notice-icon {
+  width: 32rpx;
+  height: 32rpx;
+  margin-right: 16rpx;
+  flex-shrink: 0;
+}
+.notice-text {
+  font-size: 24rpx;
+  color: #6b7280;
+  flex: 1;
+  line-height: 1.5;
+}
+
+/* 提交按钮 */
+.submit-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 20rpx var(--space-md);
+  padding-bottom: calc(20rpx + env(safe-area-inset-bottom));
+  background: #fff;
+  box-shadow: 0 -2rpx 20rpx rgba(0,0,0,0.06);
+  z-index: 100;
+}
+.submit-bar .btn-primary {
+  height: 88rpx;
+  border-radius: 44rpx;
+  font-size: var(--text-lg);
+}

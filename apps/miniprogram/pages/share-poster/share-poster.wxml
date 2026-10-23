@@ -1,0 +1,39 @@
+<!-- 分享海报 V3 — 无头像版 · 强化活动打卡点详情 -->
+<view class="page-share-poster">
+
+  <view class="poster-preview" wx:if="{{posterUrl}}">
+    <image class="poster-image" src="{{posterUrl}}" mode="widthFix" show-menu-by-longpress="{{true}}"></image>
+    <view class="poster-tip">长按海报可保存或转发给朋友</view>
+  </view>
+
+  <view class="loading-state" wx:if="{{!posterUrl && !loadError}}">
+    <view class="loading-spinner"></view>
+    <text class="loading-text">正在生成海报...</text>
+  </view>
+
+  <view class="error-state" wx:if="{{loadError}}">
+    <image class="error-icon" src="/images/icon-error.png" mode="aspectFit"></image>
+    <text class="error-text">{{loadError}}</text>
+    <view class="error-retry" bindtap="retryDraw">重新生成</view>
+  </view>
+
+  <view class="action-bar" wx:if="{{posterUrl}}">
+    <button class="action-btn action-save" bindtap="onSavePoster">
+      <image class="action-icon" src="/images/icon-save.png" mode="aspectFit"></image>
+      <text>保存到相册</text>
+    </button>
+    <button class="action-btn action-share" open-type="share">
+      <image class="action-icon" src="/images/icon-comment.png" mode="aspectFit"></image>
+      <text>分享给朋友</text>
+    </button>
+  </view>
+
+  <canvas type="2d" id="posterCanvas" class="poster-canvas"
+    style="width:{{canvasWidth}}px; height:{{canvasHeight}}px;"></canvas>
+
+  <!-- 预加载：帖子图片 + 活动封面 -->
+  <image wx:for="{{preloadImages}}" wx:key="index" class="preload-hide"
+    src="{{item.src}}" mode="aspectFill" bindload="onPreloadImgLoad" binderror="onPreloadImgError"
+    data-index="{{item.index}}"></image>
+
+</view>

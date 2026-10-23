@@ -1,0 +1,155 @@
+<!-- 官方拍照打卡页 · 大理此刻 -->
+<view class="container page-checkin {{themeClass}}">
+
+  <!-- ===== 沉浸式头部（与今日活动一致） ===== -->
+  <view class="chk-hero" style="padding-top: calc(8rpx + {{statusBarHeight}}px);">
+    <view class="hero-pattern"></view>
+    <text class="slogan-main">官方拍照打卡</text>
+    <text class="slogan-sub">大理此刻 · 官方认证打卡机位</text>
+  </view>
+
+  <!-- ===== 搜索栏（与今日活动一致） ===== -->
+  <view class="chk-search {{showSearchInput ? 'focused' : ''}}" bindtap="onToggleSearch" hover-class="haptic">
+    <image class="chk-search-icon" src="/images/icon-search.png" mode="aspectFit"></image>
+    <text class="chk-search-text" wx:if="{{!showSearchInput}}">搜索打卡点名称、描述...</text>
+    <input
+      wx:if="{{showSearchInput}}"
+      class="chk-search-input"
+      placeholder="搜索打卡点名称、描述..."
+      value="{{searchKeyword}}"
+      bindinput="onSearchInput"
+      focus="{{showSearchInput}}"
+      placeholder-class="chk-search-placeholder"
+      catchtap
+    />
+    <image class="chk-search-clear" wx:if="{{showSearchInput && searchKeyword}}" catchtap="onClearSearch" src="/images/icon-close.png" mode="aspectFit"></image>
+    <text class="chk-search-cancel" wx:if="{{showSearchInput}}" catchtap="onToggleSearch">取消</text>
+  </view>
+
+  <!-- 分类 Tab -->
+  <scroll-view class="chk-tabs-scroll" scroll-x enhanced show-scrollbar="{{false}}">
+    <view class="chk-tabs">
+      <view class="filter-tab {{activeTab === 'all'      ? 'active' : ''}}" bindtap="onTabChange" data-tab="all">全部点位</view>
+      <view class="filter-tab {{activeTab === 'scenic'   ? 'active' : ''}}" bindtap="onTabChange" data-tab="scenic"><image class="filter-tab-icon" src="/images/icon-mountain.png" mode="aspectFit"></image> 景点固定</view>
+      <view class="filter-tab {{activeTab === 'activity' ? 'active' : ''}}" bindtap="onTabChange" data-tab="activity"><image class="filter-tab-icon" src="/images/icon-sparkle.png" mode="aspectFit"></image> 活动专属</view>
+      <view class="filter-tab {{activeTab === 'nearest'  ? 'active' : ''}}" bindtap="onTabChange" data-tab="nearest"><image class="filter-tab-icon" src="/images/icon-location-sm.png" mode="aspectFit"></image> 距离最近</view>
+    </view>
+  </scroll-view>
+
+  <!-- 人流概览 -->
+  <view class="chk-crowd">
+    <text class="chk-crowd-title">实时人流概览</text>
+    <view class="chk-crowd-dots">
+      <view class="chk-crowd-item">
+        <view class="chk-crowd-dot dot-green"></view>
+        <text>{{crowdStats.empty}}个空旷</text>
+      </view>
+      <view class="chk-crowd-item">
+        <view class="chk-crowd-dot dot-orange"></view>
+        <text>{{crowdStats.busy}}个较多</text>
+      </view>
+      <view class="chk-crowd-item">
+        <view class="chk-crowd-dot dot-red"></view>
+        <text>{{crowdStats.crowded}}个拥堵</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 打卡列表 -->
+  <view class="chk-list">
+    <!-- 空状态 -->
+    <view wx:if="{{filteredList.length === 0 && searchKeyword}}" class="empty-state">
+      <view class="empty-state-icon"><image src="/images/icon-location-sm.png" mode="aspectFit" style="width:48rpx;height:48rpx;"></image></view>
+      <text class="empty-state-title">未找到相关打卡点</text>
+      <text class="empty-state-desc">换个关键词试试吧</text>
+    </view>
+
+    <view
+      class="chk-card fade-in fade-in-{{index < 5 ? index + 1 : 5}}"
+      wx:for="{{filteredList}}"
+      wx:key="id"
+      bindtap="onPointTap"
+      data-id="{{item.id}}"
+    >
+      <!-- 封面 -->
+      <view class="chk-cover">
+        <image class="chk-cover-img" src="{{item.cover}}" mode="aspectFill" lazy-load></image>
+        <!-- 人流状态 -->
+        <view class="chk-cover-badge badge-{{crowdMap[item.crowdLevel].class}}">
+          {{item.crowdLevel}}
+        </view>
+        <!-- 收费标签 -->
+        <view class="chk-price-tag {{item.chargeType === 'paid' ? 'tag-charge' : 'tag-free'}}">
+          {{item.chargeText || (item.chargeType === 'paid' ? '收费' : '免费')}}
+        </view>
+        <!-- 类型 -->
+        <view class="chk-type-tag">{{item.type === 'scenic' ? '景点固定' : '活动专属'}}</view>
+        <!-- 渐变底 -->
+        <view class="chk-cover-gradient"></view>
+      </view>
+
+      <!-- 内容 -->
+      <view class="chk-body">
+        <view class="chk-name-row">
+          <text class="chk-name text-ellipsis">{{item.name}}</text>
+          <text class="chk-distance">{{item.distance}}km</text>
+        </view>
+        <text class="chk-desc text-ellipsis-2">{{item.description}}</text>
+
+        <!-- 所属景区 -->
+        <view class="chk-scenic" wx:if="{{item.scenic_spot_name}}">
+          <image class="chk-scenic-icon" src="/images/icon-landmark.png" mode="aspectFit"></image>
+          <text class="chk-scenic-text">{{item.scenic_spot_name}}</text>
+        </view>
+
+        <!-- 双指标 -->
+        <view class="chk-indicators">
+          <view class="chk-ind ind-popularity">
+            <image class="ind-emoji-img" src="/images/icon-hot.png" mode="aspectFit"></image>
+            <text class="ind-label">人气</text>
+            <text class="ind-val">{{item.popularityText}}</text>
+          </view>
+          <view class="chk-ind ind-crowd">
+            <image class="ind-emoji-img" src="/images/icon-crowd.png" mode="aspectFit"></image>
+            <text class="ind-label">人流</text>
+            <text class="ind-val val-{{crowdMap[item.crowdLevel].class}}">{{item.crowdLevel}}</text>
+          </view>
+        </view>
+
+        <!-- 收费信息 -->
+        <view class="chk-fee" wx:if="{{item.chargeType === 'paid'}}">
+          <image class="chk-fee-icon" src="/images/icon-price.png" mode="aspectFit"></image>
+          <text>{{item.chargePrice}}</text>
+        </view>
+
+        <!-- 最佳/高峰时间 -->
+        <view class="chk-times">
+          <view class="chk-time-item"><image class="chk-time-icon" src="/images/icon-camera.png" mode="aspectFit"></image> 最佳 {{item.bestTime}}</view>
+          <view class="chk-time-item"><image class="chk-time-icon" src="/images/icon-crowd.png" mode="aspectFit"></image> 高峰 {{item.crowdPeak}}</view>
+        </view>
+
+        <!-- 操作按钮 -->
+        <view class="chk-actions">
+          <view class="btn-primary btn-sm" catchtap="onPointTap" data-id="{{item.id}}">
+            <image class="chk-btn-icon" src="/images/icon-camera.png" mode="aspectFit"></image>
+            <text>查看机位教程</text>
+          </view>
+          <view class="btn-outline btn-sm" catchtap="onNavigateToPoint" data-id="{{item.id}}">
+            <image class="chk-btn-icon" src="/images/icon-nav.png" mode="aspectFit"></image>
+            <text>导航前往</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 加载更多 -->
+    <view class="load-more" wx:if="{{hasMore && filteredList.length > 0}}">上拉加载更多...</view>
+    <view class="load-more" wx:elif="{{!hasMore && filteredList.length > 0}}">— 已展示全部打卡点 —</view>
+    <view class="safe-bottom" style="height:40rpx;"></view>
+  </view>
+
+  <!-- 返回顶部 -->
+  <view class="back-to-top {{showBackTop ? 'back-to-top-show' : ''}}" bindtap="onBackTop" hover-class="haptic">
+    <image class="back-to-top-arrow" src="/images/icon-up.png" mode="aspectFit"></image>
+  </view>
+</view>

@@ -1,0 +1,58 @@
+<!-- 注册/登录 页面 -->
+<view class="container page-register {{themeClass}}">
+
+  <!-- 沉浸式头部 -->
+  <view class="register-hero" style="padding-top: calc({{statusBarHeight}}px);">
+    <view class="hero-nav-row">
+      <view class="nav-back-btn" bindtap="onNavBack" hover-class="nav-back-active">
+        <text class="nav-back-arrow">‹</text>
+      </view>
+      <text class="nav-title">注册 / 登录</text>
+    </view>
+
+    <view class="hero-avatar-area">
+      <image class="hero-avatar" src="{{avatar || '/images/avatar-default.png'}}" mode="aspectFill"></image>
+      <text class="hero-welcome">欢迎来到大理此刻</text>
+      <text class="hero-desc">授权登录后享受完整服务体验</text>
+    </view>
+  </view>
+
+  <!-- 内容面板 -->
+  <view class="register-panel">
+
+    <!-- 登录/注册按钮 -->
+    <button class="register-btn" bindtap="onRegister">
+      登录 / 注册新用户
+    </button>
+
+    <!-- 隐私协议勾选区 -->
+    <view class="privacy-check-card">
+      <view class="privacy-check-row" bindtap="onTogglePrivacy">
+        <view class="privacy-checkbox {{privacyAgreed ? 'checked' : ''}}">
+          <image wx:if="{{privacyAgreed}}" class="check-mark" src="/images/icon-check-small.png" mode="aspectFit"></image>
+        </view>
+        <text class="privacy-text">我已阅读并同意</text>
+        <text class="privacy-link" catchtap="onShowPrivacy">《用户隐私协议》</text>
+      </view>
+    </view>
+
+    <text class="register-tip">登录即表示您同意上述协议条款</text>
+  </view>
+
+  <!-- 隐私协议弹窗 -->
+  <view class="privacy-modal" wx:if="{{showPrivacyModal}}" catchtap="onHidePrivacy">
+    <view class="privacy-modal-content" catchtap="">
+      <view class="privacy-modal-header">
+        <text class="privacy-modal-title">用户隐私协议</text>
+        <image class="privacy-modal-close" bindtap="onHidePrivacy" src="/images/icon-close.png" mode="aspectFit"></image>
+      </view>
+      <scroll-view class="privacy-modal-body" scroll-y>
+        <text class="privacy-content-text">{{privacyContent}}</text>
+      </scroll-view>
+      <view class="privacy-modal-footer">
+        <button class="privacy-agree-btn" bindtap="onAgreePrivacy">我已阅读，同意协议</button>
+      </view>
+    </view>
+  </view>
+
+</view>

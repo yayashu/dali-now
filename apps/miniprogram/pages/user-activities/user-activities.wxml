@@ -1,0 +1,54 @@
+<!-- 我的活动 -->
+<view class="container page-sub {{themeClass}}">
+  <!-- 加载中 -->
+  <view wx:if="{{loading}}" class="load-more">
+    <text class="text-light">加载中...</text>
+  </view>
+
+  <!-- 切换Tab -->
+  <view wx:else class="sub-tabs">
+    <view class="sub-tab {{activeTab === 'booked' ? 'tab-active' : ''}}" bindtap="onTab" data-tab="booked">已预约</view>
+    <view class="sub-tab {{activeTab === 'done' ? 'tab-active' : ''}}" bindtap="onTab" data-tab="done">已参与</view>
+    <view class="sub-tab {{activeTab === 'canceled' ? 'tab-active' : ''}}" bindtap="onTab" data-tab="canceled">已取消</view>
+  </view>
+
+  <!-- 已预约 -->
+  <view wx:if="{{!loading && activeTab === 'booked'}}">
+    <view class="activity-item card" wx:for="{{bookedList}}" wx:key="id" bindtap="onTap" data-id="{{item.activity_id}}">
+      <image class="activity-item-img" src="{{item.activityCover}}" mode="aspectFill"></image>
+      <view class="activity-item-info">
+        <text class="activity-item-name">{{item.activityName}}</text>
+        <text class="activity-item-time">{{item.activityDate}}</text>
+        <text class="activity-item-addr text-sm text-light" wx:if="{{item.activityAddress}}">{{item.activityAddress}}</text>
+        <view class="flex-start mt-10">
+          <view class="tag tag-success text-xs">{{item.statusText}}</view>
+          <text class="text-xs text-light ml-10">预约日期：{{item.bookingDate}}</text>
+        </view>
+      </view>
+    </view>
+    <view class="empty-state" wx:if="{{bookedList.length === 0}}">
+      <text class="text-light">暂无已预约活动</text>
+    </view>
+    <view class="load-more" wx:if="{{hasMore && bookedList.length > 0}}">上拉加载更多...</view>
+    <view class="load-more" wx:elif="{{!hasMore && bookedList.length > 0}}">— 已加载全部 —</view>
+  </view>
+
+  <!-- 已参与 -->
+  <view wx:if="{{!loading && activeTab === 'done'}}">
+    <view class="empty-state">
+      <text class="text-light">暂无已参与活动</text>
+    </view>
+  </view>
+
+  <!-- 已取消 -->
+  <view wx:if="{{!loading && activeTab === 'canceled'}}">
+    <view class="empty-state">
+      <text class="text-light">暂无已取消活动</text>
+    </view>
+  </view>
+
+  <!-- 返回顶部 -->
+  <view class="back-to-top {{showBackTop ? 'back-to-top-show' : ''}}" bindtap="onBackTop" hover-class="haptic">
+    <image class="back-to-top-arrow" src="/images/icon-up.png" mode="aspectFit"></image>
+  </view>
+</view>

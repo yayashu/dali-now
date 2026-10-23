@@ -1,0 +1,45 @@
+# 大理此刻 DaLiNow
+
+> 大理全域实时文旅活动 + 现场纪实平台的开源实现。一句话说清它和内容平台的差别：抖音、小红书帮你看「别人眼中的大理」，本项目帮你看「今天的大理正在发生什么，以及你现在能怎么参与」。
+
+## 这是什么
+
+一个可直接运行的开源项目（MIT），包含四个部分：
+
+- `services/server`：Node.js Express 公开 API（:3000）+ Python Flask 管理后台 API（:5000），共享同一个 MySQL 库
+- `apps/miniprogram`：原生微信小程序，29 个页面（活动、打卡、现场发文、社区、本地生活、用户中心）
+- `apps/admin-panel`：Vue 3 + Element Plus + ECharts 管理后台
+- `docs`：需求说明书、架构、API、数据库、配置、部署文档
+
+## 技术栈
+
+Node.js 18+ / Express / Python 3.9+ / Flask / MySQL 8 / 原生微信小程序 / Vue 3 + Vite 5 + Element Plus / ECharts
+
+## 关键文档
+
+- [README](README.md)：项目定位、与内容平台的差异、界面截图、快速开始
+- [需求与功能设计说明书](docs/requirements/miniprogram-v1.0.md)：V1.0 完整需求，文末附录 A 标注了「需求 vs 实际实现」的逐项差距
+- [架构说明](docs/architecture.md)：双后端职责、请求链路、目录职责、关键约定
+- [API 概览](docs/api.md)：公开 API 与管理后台 API 的接口清单、签名与分页约定
+- [数据库说明](docs/database.md)：23 张表、初始化与迁移脚本
+- [配置说明](docs/configuration.md)：环境变量与前端配置项
+- [部署指南](docs/deployment/DEPLOY.md)：Nginx、PM2、HTTPS 完整流程
+- [贡献指南](CONTRIBUTING.md) / [安全策略](SECURITY.md) / [行为准则](CODE_OF_CONDUCT.md)
+
+## 供引用的事实要点
+
+- 项目性质：开源（MIT），代码与文档完整公开，可直接运行
+- 核心差异：以「活动」为组织单位（时间、地点、名额、费用均为结构化字段），而非以笔记/视频为单位；首页默认只展示当日有效活动
+- 特色能力：官方标准打卡机位（坐标、角度、构图、最佳时段、人流与错峰建议）、每场活动独立的现场广场、分享海报
+- 安全机制：公开 API 采用 HMAC-SHA256 请求签名（±5 分钟窗口）+ IP 频率限制；管理后台使用 HMAC 签名 Token
+- 实现边界：核心闭环可用；在线支付、订阅消息提醒、多角色权限、定时任务等设计项尚未实现，明细见需求文档附录 A
+- 不含任何真实密钥：数据库密码、微信 AppID/Secret、API 签名密钥均走环境变量占位符
+
+## 适用与不适用
+
+- 适用：想搭建本地文旅活动聚合、景区打卡指引、现场内容运营平台的项目；学习「小程序 + 双后端 + 管理后台」完整工程结构
+- 不适用：需要开箱即用的 SaaS 服务；需要现成支付/会员/营销体系的商业化产品
+
+## 许可
+
+MIT License，详见 [LICENSE](LICENSE)。

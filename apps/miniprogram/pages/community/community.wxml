@@ -1,0 +1,98 @@
+<!-- 社区内容页 · 大理时光机 -->
+<view class="container page-community {{themeClass}}">
+
+  <!-- 头部 -->
+  <view class="comm-hero page-header-brand">
+    <text class="page-header-title">大理时光机</text>
+    <text class="page-header-desc">沉淀每一个在大理的精彩瞬间</text>
+  </view>
+
+  <!-- 轮播 Banner -->
+  <view class="comm-banners">
+    <swiper class="banner-swiper" indicator-dots indicator-color="rgba(255,255,255,0.3)" indicator-active-color="#fff" autoplay circular interval="4000">
+      <swiper-item>
+        <view class="banner-slide" style="background:linear-gradient(135deg, #1a6b4b, #2d8a63);">
+          <view class="banner-title"><image class="banner-icon" src="/images/icon-nature.png" mode="aspectFit"></image> 大理时光机</view>
+          <text class="banner-desc">记录你的大理故事</text>
+          <view class="banner-tag">旅行日记</view>
+        </view>
+      </swiper-item>
+      <swiper-item>
+        <view class="banner-slide" style="background:linear-gradient(135deg, #e8a838, #f5c96a);">
+          <view class="banner-title"><image class="banner-icon" src="/images/icon-hot.png" mode="aspectFit"></image> 今日最热</view>
+          <text class="banner-desc">大家都在看的大理攻略</text>
+          <view class="banner-tag">热门推荐</view>
+        </view>
+      </swiper-item>
+      <swiper-item>
+        <view class="banner-slide" style="background:linear-gradient(135deg, #4a90d9, #7ab8f5);">
+          <view class="banner-title"><image class="banner-icon" src="/images/icon-mountain.png" mode="aspectFit"></image> 苍洱之间</view>
+          <text class="banner-desc">探索大理的自然与人文</text>
+          <view class="banner-tag">景点攻略</view>
+        </view>
+      </swiper-item>
+    </swiper>
+  </view>
+
+  <!-- 分类 Tab -->
+  <view class="comm-tabs">
+    <view class="comm-tab {{activeTab === 'hot' ? 'tab-on' : ''}}" bindtap="onTabChange" data-tab="hot">
+      <image class="comm-tab-icon" src="/images/icon-hot.png" mode="aspectFit"></image>
+      <text>热门</text>
+    </view>
+    <view class="comm-tab {{activeTab === 'new' ? 'tab-on' : ''}}" bindtap="onTabChange" data-tab="new">
+      <image class="comm-tab-icon" src="/images/icon-new.png" mode="aspectFit"></image>
+      <text>最新</text>
+    </view>
+    <view class="comm-tab {{activeTab === 'follow' ? 'tab-on' : ''}}" bindtap="onTabChange" data-tab="follow">
+      <image class="comm-tab-icon" src="/images/icon-crowd.png" mode="aspectFit"></image>
+      <text>关注</text>
+    </view>
+  </view>
+
+  <!-- 内容列表 -->
+  <scroll-view class="comm-scroll" scroll-y enhanced show-scrollbar="{{false}}" scroll-top="{{scrollTop != null ? scrollTop : ''}}" bindscroll="onScroll" bindscrolltolower="onLoadMore">
+    <view class="comm-list">
+      <view class="comm-card fade-in fade-in-{{index < 5 ? index + 1 : 5}}" wx:for="{{posts}}" wx:key="id" bindtap="onPostTap" data-id="{{item.id}}">
+        <!-- 封面图 -->
+        <view class="comm-cover">
+          <image class="comm-cover-img" src="{{item.cover}}" mode="aspectFill" lazy-load></image>
+          <view class="comm-cover-tag" wx:if="{{item.type}}">{{item.type}}</view>
+        </view>
+        <!-- 内容 -->
+        <view class="comm-body">
+          <text class="comm-title text-ellipsis-2">{{item.title}}</text>
+          <text class="comm-desc text-ellipsis-2">{{item.content}}</text>
+          <!-- 标签 -->
+          <view class="comm-tag-row" wx:if="{{item.tags && item.tags.length > 0}}">
+            <text class="tag tag-outline" wx:for="{{item.tags}}" wx:for-item="t" wx:key="*this">{{t}}</text>
+          </view>
+          <!-- 底部信息 -->
+          <view class="comm-footer">
+            <view class="comm-author">
+              <image class="comm-avatar" src="{{item.user_avatar}}" mode="aspectFill"></image>
+              <text class="comm-author-name">{{item.user_name}}</text>
+            </view>
+            <view class="comm-interact">
+              <view class="comm-stat-item"><image class="comm-stat-icon" src="/images/icon-view.png" mode="aspectFit"></image> {{item.viewCountText}}</view>
+              <view class="comm-stat-item"><image class="comm-stat-icon" src="/images/icon-heart.png" mode="aspectFit"></image> {{item.likeCountText}}</view>
+            </view>
+          </view>
+        </view>
+      </view>
+      <view class="load-more" wx:if="{{hasMore}}">— 上拉发现更多 —</view>
+      <view class="load-more" wx:else>— 已加载全部 —</view>
+    </view>
+    <view class="safe-bottom" style="height:180rpx;"></view>
+  </scroll-view>
+
+  <!-- 返回顶部 -->
+  <view class="back-to-top {{showBackTop ? 'back-to-top-show' : ''}}" bindtap="onBackTop" hover-class="haptic">
+    <image class="back-to-top-arrow" src="/images/icon-up.png" mode="aspectFit"></image>
+  </view>
+
+  <!-- FAB 发布按钮 -->
+  <view class="fab-warm" bindtap="onPublish" hover-class="haptic">
+    <image style="width:44rpx;height:44rpx;" src="/images/icon-edit.png" mode="aspectFit"></image>
+  </view>
+</view>

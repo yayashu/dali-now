@@ -1,0 +1,232 @@
+<!-- 首页 - 今日活动列表 · 大理此刻 -->
+<view class="container page-index {{themeClass}}">
+
+  <!-- ===== 沉浸式头部 ===== -->
+  <view class="index-hero" style="padding-top: calc(8rpx + {{statusBarHeight}}px);">
+    <view class="hero-pattern"></view>
+    <!-- 主标题 -->
+    <text class="slogan-main">发现大理</text>
+    <!-- 副标题（紧贴标题，上移） -->
+    <text class="slogan-sub">今天有<text class="slogan-num">{{totalCount}}</text>场活动等你探索</text>
+    <!-- 底部行：区域选择 + 活动日历 + 主题切换（同行，底部对齐） -->
+    <view class="hero-bottom">
+      <view class="hero-location" bindtap="onSelectDistrict" hover-class="haptic">
+        <image class="loc-icon-img" src="/images/icon-location.png" mode="aspectFit"></image>
+        <text class="loc-text">{{currentDistrict}}</text>
+        <image class="loc-arrow" src="/images/icon-arrow-down.png" mode="aspectFit"></image>
+      </view>
+      <view class="hero-right">
+        <view class="hero-action hero-theme-btn" bindtap="onToggleTheme" hover-class="haptic">
+          <image class="action-icon-img" src="{{icons.theme}}" mode="aspectFit"></image>
+        </view>
+        <view class="hero-action" bindtap="onToggleCalendar" hover-class="haptic">
+          <image class="action-icon-img" src="{{icons.calendar}}" mode="aspectFit"></image>
+          <text>活动日历</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- ===== 日历面板（月视图） ===== -->
+  <view class="calendar-wrap {{showCalendar ? 'calendar-open' : ''}}">
+    <view class="calendar-panel">
+      <view class="cal-top">
+        <view class="cal-nav-row">
+          <image class="cal-nav-btn-img" src="/images/icon-arrow-left.png" mode="aspectFit" bindtap="onPrevMonth"></image>
+          <text class="cal-month-label">{{calendarYear}}年{{calendarMonth}}月</text>
+          <image class="cal-nav-btn-img" src="/images/icon-arrow-right.png" mode="aspectFit" bindtap="onNextMonth"></image>
+        </view>
+        <view class="cal-today-btn" bindtap="onTodayTap">回到今天</view>
+      </view>
+      <!-- 星期 -->
+      <view class="cal-week-row">
+        <text class="cal-week-cell" wx:for="{{calendarWeekLabels}}" wx:key="*this">{{item}}</text>
+      </view>
+      <!-- 日期网格 -->
+      <view class="cal-grid">
+        <view
+          wx:for="{{calendarDays}}"
+          wx:key="index"
+          class="cal-cell {{item.isEmpty ? 'cal-empty' : ''}} {{item.isToday ? 'cal-today' : ''}}"
+        >
+          <view wx:if="{{!item.isEmpty}}" class="cal-inner">
+            <text class="cal-day">{{item.day}}</text>
+            <view wx:if="{{item.hasActivity}}" class="cal-dots">
+              <text
+                wx:for="{{item.activityNames}}"
+                wx:for-item="a"
+                wx:for-index="ai"
+                wx:key="ai"
+                class="cal-dot"
+                style="background:{{item.bgColors[ai]}}"
+              ></text>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- ===== 搜索栏 ===== -->
+  <view class="idx-search" bindtap="onGoSearch" hover-class="haptic">
+    <image class="idx-search-icon-img" src="/images/icon-search.png" mode="aspectFit"></image>
+    <text class="idx-search-text">搜索活动名称、地点、类型...</text>
+  </view>
+
+  <!-- ===== 分类筛选（胶囊式增强） ===== -->
+  <scroll-view class="idx-tabs" scroll-x enhanced show-scrollbar="{{false}}">
+    <view class="idx-tab {{activeTab === 'all'  ? 'tab-on' : ''}}" bindtap="onTabChange" data-tab="all">全部活动</view>
+    <view class="idx-tab {{activeTab === 'folk' ? 'tab-on' : ''}}" bindtap="onTabChange" data-tab="folk"><image class="tab-icon-img" src="{{icons.folk}}" mode="aspectFit"></image> 当地民俗</view>
+    <view class="idx-tab {{activeTab === 'temp' ? 'tab-on' : ''}}" bindtap="onTabChange" data-tab="temp"><image class="tab-icon-img" src="{{icons.sparkle}}" mode="aspectFit"></image> 临时活动</view>
+  </scroll-view>
+
+  <!-- ===== 排序条 ===== -->
+  <view class="idx-sort">
+    <view class="sort-item {{sortBy === 'time'     ? 'sort-on' : ''}}" bindtap="onSortChange" data-sort="time"><image class="sort-icon-img" src="/images/icon-time.png" mode="aspectFit"></image> 时间</view>
+    <view class="sort-item {{sortBy === 'hot'      ? 'sort-on' : ''}}" bindtap="onSortChange" data-sort="hot"><image class="sort-icon-img" src="{{icons.hot}}" mode="aspectFit"></image> 热度</view>
+    <view class="sort-item {{sortBy === 'distance'  ? 'sort-on' : ''}}" bindtap="onSortChange" data-sort="distance"><image class="sort-icon-img" src="{{icons.distance}}" mode="aspectFit"></image> 距离</view>
+    <view class="sort-item sort-free {{filterFree ? 'sort-on' : ''}}" bindtap="onToggleFree"><image class="sort-icon-img" src="/images/icon-price.png" mode="aspectFit"></image> 免费优先</view>
+  </view>
+
+  <!-- ===== 活动列表 ===== -->
+  <view class="idx-list">
+
+    <!-- 骨架屏 -->
+    <block wx:if="{{loading}}">
+      <view class="skeleton-card" wx:for="{{[1,2,3]}}" wx:key="*this">
+        <view class="skeleton skeleton-cover"></view>
+        <view style="padding:24rpx;">
+          <view class="skeleton skeleton-tag"></view>
+          <view class="skeleton skeleton-line skeleton-line-lg" style="margin-top:16rpx;"></view>
+          <view class="skeleton skeleton-line skeleton-line-md" style="margin-top:12rpx;"></view>
+          <view class="skeleton skeleton-line skeleton-line-sm" style="margin-top:12rpx;"></view>
+          <view style="display:flex;justify-content:space-between;margin-top:20rpx;">
+            <view class="skeleton skeleton-line-xs"></view>
+            <view class="skeleton skeleton-tag"></view>
+          </view>
+        </view>
+      </view>
+    </block>
+
+    <!-- 活动卡片 -->
+    <block wx:elif="{{filteredList.length > 0}}">
+      <view
+        class="act-card fade-in fade-in-{{index < 6 ? index + 1 : 6}}"
+        wx:for="{{filteredList}}"
+        wx:key="id"
+        bindtap="onActivityTap"
+        data-id="{{item.id}}"
+        hover-class="card-press"
+      >
+        <!-- 封面 -->
+        <view class="act-cover">
+          <image class="act-cover-img" src="{{item.cover}}" mode="aspectFill" lazy-load></image>
+          <!-- 价格标签 -->
+          <view class="act-price-tag {{item.is_free ? 'price-free' : 'price-charge'}}">
+            {{item.price_text}}
+          </view>
+          <!-- 热度角标 -->
+          <view class="act-hot-badge" wx:if="{{item.hotLevel === '爆火'}}"><image class="hot-badge-icon" src="{{icons.hot}}" mode="aspectFit"></image> 爆火</view>
+          <!-- 剩余名额 -->
+          <view class="act-remain" wx:if="{{item.remaining <= 20 && item.remaining > 0}}">
+            仅剩 {{item.remaining}} 位
+          </view>
+          <!-- 约满蒙层 -->
+          <view class="act-soldout" wx:if="{{item.remaining === 0}}">
+            <text>已约满</text>
+          </view>
+          <!-- 渐变底部 -->
+          <view class="act-cover-gradient"></view>
+        </view>
+
+        <!-- 内容 -->
+        <view class="act-body">
+          <!-- 标签行：热度 + 类型标签同行 -->
+          <view class="act-tags">
+            <image class="tag-hot-icon" src="{{icons.hot}}" mode="aspectFit"></image><text class="tag-hot">{{item.hotValueText}}</text>
+            <view class="tag {{item.type === 'folk' ? 'tag-warm' : 'tag-brand'}}">{{item.type_name}}</view>
+            <view class="tag tag-outline" wx:if="{{item.duration_days && item.duration_days > 1}}">
+              持续{{item.duration_days}}天
+            </view>
+            <view class="tag {{item.is_free ? 'tag-brand' : 'tag-outline'}}">
+              {{item.is_free ? '免费' : '收费'}}
+            </view>
+            <view class="tag tag-outline" wx:for="{{item.tags}}" wx:for-item="t" wx:key="*this">{{t}}</view>
+          </view>
+          <!-- 标题行：名称 + 日期 同行，日期靠右下对齐 -->
+          <view class="act-title-row">
+            <text class="act-title text-ellipsis-2">{{item.name}}</text>
+            <view class="act-date">
+              <image class="date-icon-img" src="/images/icon-time.png" mode="aspectFit"></image>
+              <text wx:if="{{item.date_range_start && item.date_range_end}}">{{item.date_range_start}} ~ {{item.date_range_end}}</text>
+              <text wx:elif="{{item.date}}">{{item.date}} {{item.time}}</text>
+              <text wx:else>{{item.time}}</text>
+            </view>
+          </view>
+          <!-- 活动简介 -->
+          <view class="act-desc-row" wx:if="{{item.descText}}">
+            <image class="desc-icon-img" src="{{icons.desc}}" mode="aspectFit"></image>
+            <text class="act-desc text-ellipsis">{{item.descText}}</text>
+          </view>
+          <!-- 底部：位置 + 按钮 同行对齐 -->
+          <view class="act-footer">
+            <view class="meta-row">
+              <image class="meta-icon-img" src="/images/icon-location-sm.png" mode="aspectFit"></image>
+              <text class="text-ellipsis">{{item.location}}</text>
+            </view>
+            <view class="btn-sm act-btn" wx:if="{{item.remaining > 0}}">
+              {{item.is_free ? '查看详情' : '立即报名'}}
+            </view>
+            <view class="btn-sm act-btn-disabled" wx:else>已约满</view>
+          </view>
+        </view>
+      </view>
+
+      <!-- 加载更多 -->
+      <view class="load-more" wx:if="{{hasMore}}">上拉探索更多活动...</view>
+      <view class="load-more" wx:else>— 已发现全部活动 —</view>
+    </block>
+
+    <!-- 空状态增强 -->
+    <view class="empty-state" wx:elif="{{!loading && filteredList.length === 0}}">
+      <image class="empty-state-icon-img" src="{{icons.empty}}" mode="aspectFit"></image>
+      <text class="empty-state-title">暂无相关活动</text>
+      <text class="empty-state-desc">换个分类或筛选条件试试吧</text>
+      <view class="empty-state-action">
+        <view class="btn-outline btn-sm" bindtap="onClearFilters">重置筛选</view>
+      </view>
+    </view>
+
+    <view class="safe-bottom" style="height:60rpx;"></view>
+  </view>
+
+  <!-- ===== 返回顶部 ===== -->
+  <view class="back-to-top {{showBackTop ? 'back-to-top-show' : ''}}" bindtap="onBackTop" hover-class="haptic">
+    <image class="back-to-top-arrow-img" src="{{icons.up}}" mode="aspectFit"></image>
+  </view>
+
+  <!-- ===== 区域选择弹窗 ===== -->
+  <view class="overlay {{showDistrictPopup ? 'show' : ''}}" catchtap="onCloseDistrict">
+    <view class="overlay-mask"></view>
+    <view class="overlay-panel" catchtap="stopPropagation">
+      <view class="panel-handle"></view>
+      <view class="panel-header">
+        <text class="panel-title">选择区域</text>
+        <image class="panel-close" bindtap="onCloseDistrict" src="/images/icon-close.png" mode="aspectFit"></image>
+      </view>
+      <scroll-view class="panel-body" scroll-y>
+        <view
+          class="district-option {{item.code === selectedDistrict ? 'option-on' : ''}}"
+          wx:for="{{districts}}"
+          wx:key="code"
+          bindtap="onDistrictSelect"
+          data-code="{{item.code}}"
+          data-name="{{item.name}}"
+        >
+          <text>{{item.name}}</text>
+          <image wx:if="{{item.code === selectedDistrict}}" class="option-check" src="/images/icon-check-small.png" mode="aspectFit"></image>
+        </view>
+      </scroll-view>
+    </view>
+  </view>
+</view>

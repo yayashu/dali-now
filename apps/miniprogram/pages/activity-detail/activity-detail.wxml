@@ -1,0 +1,244 @@
+<!-- 活动详情页 -->
+<view class="container page-detail {{themeClass}}">
+
+  <!-- 发布成功内联 Toast -->
+  <view class="inline-toast" wx:if="{{inlineToast}}">{{inlineToast}}</view>
+
+  <!-- 弹幕层 -->
+  <view class="danmaku-layer" wx:if="{{danmakuOn}}">
+    <view class="danmaku-item {{item._leaving ? 'danmaku-leave' : ''}}"
+      wx:for="{{danmakuItems}}"
+      wx:key="_dkid"
+      style="top: {{item._row * 78}}rpx; animation-duration: {{item._dur}}s;">
+      <image class="danmaku-avatar" src="{{item.user_avatar}}" mode="aspectFill"></image>
+      <text class="danmaku-name">{{item.user_name}}</text>
+      <text class="danmaku-text">{{item._text}}</text>
+    </view>
+  </view>
+
+  <!-- 顶部海报轮播 + 弹幕开关 -->
+  <view class="poster-wrap">
+    <swiper class="poster-swiper" indicator-dots indicator-color="rgba(255,255,255,0.5)" indicator-active-color="#ffffff" autoplay circular>
+      <swiper-item wx:for="{{activity.images}}" wx:key="*this">
+        <image class="poster-img" src="{{item}}" mode="aspectFill"></image>
+      </swiper-item>
+    </swiper>
+
+    <!-- 返回按钮 -->
+    <view class="back-btn" bindtap="onBack">
+      <image src="/images/icon-back.png" mode="aspectFit"></image>
+    </view>
+
+    <!-- 弹幕开关（头图右下角） -->
+    <view class="danmaku-toggle {{danmakuOn ? 'on' : 'off'}}" bindtap="onToggleDanmaku">
+      <text class="danmaku-toggle-text">弹幕</text>
+      <view class="danmaku-toggle-dot"></view>
+    </view>
+  </view>
+
+  <!-- 基本信息 -->
+  <view class="info-section card-no-margin">
+    <view class="info-header">
+      <view class="tag {{activity.type === 'folk' ? 'tag-primary' : 'tag-accent'}}">
+        {{activity.type_name}}
+      </view>
+      <view class="tag {{activity.hotLevelClass}}" wx:if="{{activity.hotLevel}}">
+        <image class="tag-icon-img" src="{{icons.hot}}" mode="aspectFit"></image> {{activity.hotLevel}}
+      </view>
+    </view>
+
+    <view class="info-title">{{activity.name}}</view>
+
+    <view class="info-meta">
+      <view class="meta-row">
+        <image class="meta-icon" src="/images/icon-time.png" mode="aspectFit"></image>
+        <text>{{activity.date}} {{activity.time}}</text>
+        <text class="meta-tag">{{activity.time_range}}</text>
+      </view>
+      <view class="meta-row">
+        <image class="meta-icon" src="/images/icon-location-sm.png" mode="aspectFit"></image>
+        <text>{{activity.location}}</text>
+      </view>
+      <view class="meta-row">
+        <image class="meta-icon" src="/images/icon-price.png" mode="aspectFit"></image>
+        <text class="{{activity.is_free ? 'text-primary text-bold' : 'text-accent text-bold'}}">{{activity.price_text}}</text>
+      </view>
+    </view>
+
+    <!-- 报名数据 -->
+    <view class="booking-stats">
+      <view class="stat-item">
+        <text class="stat-value">{{activity.booked}}</text>
+        <text class="stat-label">已报名</text>
+      </view>
+      <view class="stat-divider"></view>
+      <view class="stat-item">
+        <text class="stat-value text-accent">{{activity.remaining}}</text>
+        <text class="stat-label">剩余名额</text>
+      </view>
+      <view class="stat-divider"></view>
+      <view class="stat-item">
+        <text class="stat-value text-primary">{{activity.capacity}}</text>
+        <text class="stat-label">总名额</text>
+      </view>
+    </view>
+
+    <!-- 进度条 -->
+    <view class="progress-bar">
+      <view class="progress-fill" style="width: {{activity.capacity > 0 ? (activity.booked / activity.capacity * 100) : 0}}%"></view>
+    </view>
+  </view>
+
+  <!-- 活动介绍 -->
+  <view class="card">
+    <view class="section-title">活动介绍</view>
+    <view class="section-content">{{activity.description}}</view>
+
+    <view wx:if="{{activity.culture_intro}}" class="culture-box">
+      <view class="culture-header">
+        <image src="/images/icon-culture.png" mode="aspectFit"></image>
+        <text>民俗文化背景</text>
+      </view>
+      <text class="culture-text">{{activity.culture_intro}}</text>
+    </view>
+  </view>
+
+  <!-- 活动详情 -->
+  <view class="card">
+    <view class="section-title">详细信息</view>
+
+    <view class="detail-row">
+      <text class="detail-label">主办方</text>
+      <text class="detail-value">{{activity.organizer}}</text>
+    </view>
+    <view class="detail-row">
+      <text class="detail-label">交通指南</text>
+      <text class="detail-value">{{activity.traffic}}</text>
+    </view>
+    <view class="detail-row">
+      <text class="detail-label">注意事项</text>
+      <text class="detail-value">{{activity.notes}}</text>
+    </view>
+    <view class="detail-row">
+      <text class="detail-label">报名规则</text>
+      <text class="detail-value">{{activity.rules}}</text>
+    </view>
+  </view>
+
+  <!-- 核心联动入口 -->
+  <view class="quick-actions">
+    <view class="quick-action-item" bindtap="onGoCheckin">
+      <view class="quick-icon-box icon-green">
+        <image src="/images/icon-camera.png" mode="aspectFit"></image>
+      </view>
+      <view class="quick-text">
+        <text class="quick-title">官方打卡点位</text>
+        <text class="quick-desc">查看本活动专属打卡机位</text>
+      </view>
+      <image class="quick-arrow" src="/images/icon-arrow-right.png" mode="aspectFit"></image>
+    </view>
+
+    <view class="quick-action-item" bindtap="onGoLivePost">
+      <view class="quick-icon-box icon-orange">
+        <image src="/images/icon-live.png" mode="aspectFit"></image>
+      </view>
+      <view class="quick-text">
+        <text class="quick-title">我在现场发文</text>
+        <text class="quick-desc">发布你的现场纪实内容</text>
+      </view>
+      <image class="quick-arrow" src="/images/icon-arrow-right.png" mode="aspectFit"></image>
+    </view>
+  </view>
+
+  <!-- 活动现场广场 -->
+  <view class="live-square-section">
+    <view class="section-header">
+      <view class="section-title-row">
+        <image class="section-icon" src="/images/icon-live.png" mode="aspectFit"></image>
+        <text class="section-title">活动现场广场</text>
+        <text class="live-count">共{{livePosts.length}}条现场动态</text>
+      </view>
+      <text class="view-all" bindtap="onViewAllLive">查看全部</text>
+    </view>
+
+    <scroll-view class="live-scroll" scroll-x show-scrollbar="{{false}}">
+      <view class="live-scroll-inner">
+        <view class="live-card" wx:for="{{livePosts}}" wx:key="id" wx:for-item="post">
+          <image class="live-card-img" src="{{post.images ? post.images[0] : post.cover}}" mode="aspectFill"></image>
+          <view class="live-card-info">
+            <view class="live-user-row">
+              <image class="live-user-avatar" src="{{post.user_avatar}}" mode="aspectFill"></image>
+              <text class="live-user-name">{{post.user_name}}</text>
+            </view>
+            <text class="live-card-text text-ellipsis-2">{{post.content}}</text>
+            <view class="live-card-meta">
+              <text>{{post.time}}</text>
+              <view class="live-likes"><image class="like-icon-img" src="{{icons.heart}}" mode="aspectFit"></image> {{post.like_count}}</view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- 评价游记 -->
+  <view class="card">
+    <view class="section-header">
+      <text class="section-title">评价游记</text>
+      <text class="view-all">查看全部</text>
+    </view>
+    <view class="empty-state" style="padding: 40rpx;">
+      <text class="text-light text-sm">暂无评价，参与活动后来写一篇吧</text>
+    </view>
+  </view>
+
+  <!-- 底部操作栏 -->
+  <view class="bottom-bar safe-bottom">
+    <view class="bottom-actions">
+      <view class="bottom-action" bindtap="onToggleFavorite">
+        <image src="{{isFavorited ? '/images/icon-favorited.png' : '/images/icon-favorite.png'}}" mode="aspectFit"></image>
+        <text class="{{isFavorited ? 'text-accent' : ''}}">{{isFavorited ? '已收藏' : '收藏'}}</text>
+      </view>
+      <view class="bottom-action" bindtap="onSetReminder">
+        <image class="{{reminderEnabled ? 'icon-active' : ''}}" src="/images/icon-bell.png" mode="aspectFit"></image>
+        <text class="{{reminderEnabled ? 'text-accent' : ''}}">{{reminderEnabled ? '已提醒' : '提醒'}}</text>
+      </view>
+      <button class="bottom-action bottom-action-btn" open-type="share">
+        <image src="/images/icon-share.png" mode="aspectFit"></image>
+        <text>分享</text>
+      </button>
+      <view class="bottom-action" bindtap="onNavigate">
+        <image src="/images/icon-nav.png" mode="aspectFit"></image>
+        <text>导航</text>
+      </view>
+      <view class="bottom-action" bindtap="onConsult">
+        <image src="/images/icon-chat.png" mode="aspectFit"></image>
+        <text>咨询</text>
+      </view>
+    </view>
+    <!-- 免费活动不显示预约按钮 -->
+    <view class="bottom-btn-wrap" wx:if="{{!activity.is_free && activity.remaining > 0}}">
+      <view class="btn-primary btn-block" bindtap="onOpenQrModal">
+        查看报名方式
+      </view>
+    </view>
+    <view class="bottom-btn-wrap" wx:elif="{{!activity.is_free && activity.remaining <= 0}}">
+      <view class="btn-disabled btn-block">已约满</view>
+    </view>
+  </view>
+
+  <!-- 二维码弹窗 -->
+  <view class="qr-modal-mask" wx:if="{{showQrModal}}" bindtap="onCloseQrModal"></view>
+  <view class="qr-modal" wx:if="{{showQrModal}}">
+    <view class="qr-modal-close" bindtap="onCloseQrModal">
+      <image src="/images/icon-close.png" mode="aspectFit" style="width:36rpx;height:36rpx;"></image>
+    </view>
+    <view class="qr-modal-title">扫码报名</view>
+    <view class="qr-modal-name">{{activity.name}}</view>
+    <view class="qr-modal-price">{{activity.price_text}}</view>
+    <image class="qr-modal-img" src="{{qrCodeUrl}}" mode="aspectFit" show-menu-by-longpress="{{true}}"></image>
+    <view class="qr-modal-tip">长按识别二维码跳转至官方应用报名</view>
+    <view class="qr-modal-desc">也可长按保存图片后在微信中扫码识别</view>
+  </view>
+
+</view>

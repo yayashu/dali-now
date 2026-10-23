@@ -1,0 +1,247 @@
+/* ============================================================
+   景区详情页 — 对齐首页 UI 体系
+   ============================================================ */
+
+.page-scenic-detail {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: var(--bg-page);
+}
+
+/* ── 加载态 ── */
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: var(--space-md);
+}
+.loading-icon { width: 56rpx; height: 56rpx; }
+.loading-text { font-size: var(--text-base); color: var(--text-hint); }
+
+/* ── 滚动区 ── */
+.sd-scroll {
+  flex: 1;
+  min-height: 0;
+}
+
+/* ============================================================
+   图片画廊
+   ============================================================ */
+.sd-gallery {
+  position: relative;
+  width: 100%;
+  height: 480rpx;
+  background: #000;
+}
+.sd-swiper {
+  width: 100%;
+  height: 100%;
+}
+.sd-gallery-img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+.sd-gallery-count {
+  position: absolute;
+  right: 24rpx;
+  bottom: 24rpx;
+  padding: 6rpx 16rpx;
+  background: rgba(0,0,0,0.5);
+  border-radius: var(--radius-full);
+  color: #fff;
+  font-size: var(--text-2xs);
+  backdrop-filter: blur(4rpx);
+}
+
+/* ============================================================
+   基础信息卡
+   ============================================================ */
+.sd-info-card {
+  margin: var(--space-md) var(--space-lg);
+  padding: var(--space-lg);
+  background: var(--bg-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+.sd-name-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  margin-bottom: var(--space-md);
+}
+.sd-name {
+  font-size: 40rpx;
+  font-weight: 800;
+  color: var(--text-title);
+  flex: 1;
+}
+.sd-level {
+  padding: 6rpx 16rpx;
+  background: linear-gradient(135deg, var(--color-warm), #e67e22);
+  color: #fff;
+  font-size: var(--text-2xs);
+  font-weight: 600;
+  border-radius: var(--radius-full);
+  flex-shrink: 0;
+}
+.sd-meta-row {
+  display: flex;
+  gap: var(--space-lg);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-md);
+}
+.sd-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 6rpx;
+}
+.sd-meta-icon { width: 28rpx; height: 28rpx; flex-shrink: 0; }
+.sd-meta-val {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+.sd-meta-val.text-free {
+  color: var(--color-brand);
+  font-weight: 700;
+}
+.sd-half-tip {
+  margin-bottom: var(--space-md);
+  padding: 12rpx 16rpx;
+  background: var(--color-warm-bg);
+  border-radius: var(--radius-md);
+  font-size: var(--text-xs);
+  color: var(--color-warm);
+}
+.sd-tags {
+  display: flex;
+  gap: 8rpx;
+  flex-wrap: wrap;
+}
+
+/* ============================================================
+   内容区块
+   ============================================================ */
+.sd-section {
+  margin: 0 var(--space-lg) var(--space-md);
+  padding: var(--space-lg);
+  background: var(--bg-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xs);
+}
+.sd-sec-title {
+  display: flex;
+  align-items: center;
+  font-size: var(--text-md);
+  font-weight: 700;
+  color: var(--text-title);
+  margin-bottom: var(--space-md);
+}
+.sd-sec-title-icon {
+  width: 30rpx;
+  height: 30rpx;
+  margin-right: 8rpx;
+}
+.sd-tip-icon {
+  width: 28rpx;
+  height: 28rpx;
+  margin-right: 6rpx;
+}
+.sd-half-tip-text {
+  display: flex;
+  align-items: center;
+}
+.sd-desc {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  line-height: 1.8;
+  white-space: pre-wrap;
+}
+
+/* 配套设施 */
+.sd-facility-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10rpx;
+}
+.sd-facility-item {
+  padding: 8rpx 20rpx;
+  background: var(--color-brand-bg);
+  color: var(--color-brand);
+  font-size: var(--text-xs);
+  border-radius: var(--radius-full);
+  font-weight: 500;
+}
+
+/* 联系信息 */
+.sd-contact-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+.sd-contact-item {
+  display: flex;
+  align-items: center;
+  gap: 10rpx;
+  padding: 16rpx;
+  background: var(--bg-page);
+  border-radius: var(--radius-md);
+  transition: all var(--duration-fast);
+}
+.sd-contact-item:active {
+  background: var(--color-brand-bg);
+  transform: scale(0.98);
+}
+.sd-contact-icon { width: 28rpx; height: 28rpx; flex-shrink: 0; }
+.sd-nav-icon { width: 28rpx; height: 28rpx; margin-right: 4rpx; flex-shrink: 0; }
+.sd-contact-text {
+  flex: 1;
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.sd-contact-action {
+  font-size: var(--text-2xs);
+  color: var(--color-brand);
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   底部操作栏
+   ============================================================ */
+.sd-bottom-bar {
+  display: flex;
+  gap: var(--space-md);
+  padding: var(--space-md) var(--space-lg);
+  padding-bottom: calc(var(--space-lg) + env(safe-area-inset-bottom));
+  background: var(--bg-surface);
+  box-shadow: 0 -2rpx 12rpx rgba(0,0,0,0.04);
+  flex-shrink: 0;
+}
+.sd-bottom-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 22rpx;
+  border-radius: var(--radius-full);
+  font-size: var(--text-base);
+  font-weight: 600;
+  transition: all var(--duration-fast) var(--ease-out);
+}
+.sd-btn-nav {
+  background: var(--bg-page);
+  color: var(--text-title);
+  border: 2rpx solid var(--border-light);
+}
+.sd-bottom-btn:active {
+  transform: scale(0.96);
+}

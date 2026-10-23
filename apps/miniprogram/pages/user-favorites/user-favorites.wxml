@@ -1,0 +1,47 @@
+<view class="container page-sub {{themeClass}}">
+  <!-- 加载中 -->
+  <view wx:if="{{loading}}" class="load-more">
+    <text class="text-light">加载中...</text>
+  </view>
+
+  <!-- 空状态 -->
+  <view wx:elif="{{!favorites.length}}" class="empty-state" style="padding-top: 200rpx;">
+    <image src="/images/empty-fav.png" style="width:200rpx;height:200rpx;opacity:0.5;" mode="aspectFit"></image>
+    <text class="text-light mt-20">暂无收藏</text>
+    <text class="text-light text-sm">去发现精彩活动，点击收藏吧</text>
+  </view>
+
+  <!-- 收藏列表 -->
+  <view wx:else class="fav-list">
+    <view
+      wx:for="{{favorites}}"
+      wx:key="id"
+      class="fav-item card flex-start"
+      data-url="{{item.navPage}}"
+      data-item-type="{{item.item_type}}"
+      data-item-id="{{item.item_id}}"
+      bindtap="onTapItem"
+      bindlongpress="onRemoveFav"
+    >
+      <image
+        wx:if="{{item.itemCover}}"
+        class="fav-cover"
+        src="{{item.itemCover}}"
+        mode="aspectFill"
+      />
+      <view class="fav-info flex-1">
+        <text class="fav-name text-bold text-ellipsis">{{item.itemName}}</text>
+        <text class="fav-desc text-sm text-light text-ellipsis" wx:if="{{item.itemDesc}}">{{item.itemDesc}}</text>
+        <text class="fav-type tag tag-primary text-xs">{{item.item_type === 'activity' ? '活动' : item.item_type === 'checkin' ? '打卡点' : item.item_type === 'community' ? '社区帖' : '现场发文'}}</text>
+      </view>
+      <text class="text-light fav-arrow">›</text>
+    </view>
+    <view class="load-more" wx:if="{{hasMore && favorites.length > 0}}">上拉加载更多...</view>
+    <view class="load-more" wx:elif="{{!hasMore && favorites.length > 0}}">— 已加载全部 —</view>
+  </view>
+
+  <!-- 返回顶部 -->
+  <view class="back-to-top {{showBackTop ? 'back-to-top-show' : ''}}" bindtap="onBackTop" hover-class="haptic">
+    <image class="back-to-top-arrow" src="/images/icon-up.png" mode="aspectFit"></image>
+  </view>
+</view>

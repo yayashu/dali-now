@@ -1,0 +1,92 @@
+<!-- 活动现场广场 -->
+<view class="container page-live-square {{themeClass}}">
+
+  <view class="square-header">
+    <view class="back-btn" bindtap="onBack">
+      <image src="/images/icon-back.png" mode="aspectFit"></image>
+    </view>
+    <text class="square-title">{{activityName}}</text>
+    <text class="square-subtitle">活动现场广场 · 实时氛围</text>
+  </view>
+
+  <!-- 数据概览 -->
+  <view class="square-stats">
+    <view class="square-stat">
+      <text class="square-stat-num">{{stats.postCount}}</text>
+      <text class="square-stat-label">现场动态</text>
+    </view>
+    <view class="square-stat">
+      <text class="square-stat-num">{{stats.onlineCount}}</text>
+      <text class="square-stat-label">实时在场</text>
+    </view>
+    <view class="square-stat">
+      <text class="square-stat-num">{{stats.totalLikes}}</text>
+      <text class="square-stat-label">总互动</text>
+    </view>
+  </view>
+
+  <!-- 动态列表 -->
+  <view class="square-posts">
+    <view class="feed-item" wx:for="{{posts}}" wx:key="id">
+      <view class="feed-user">
+        <image class="feed-avatar" src="{{item.user_avatar}}" mode="aspectFill"></image>
+        <view class="feed-user-info">
+          <text class="feed-user-name">{{item.user_name}}</text>
+          <text class="feed-time">{{item.time}}</text>
+        </view>
+        <view class="tag tag-primary" wx:if="{{item.is_verified}}">已核验</view>
+      </view>
+
+      <view class="feed-content">
+        <text>{{item.content}}</text>
+      </view>
+
+      <view class="feed-media" wx:if="{{item.images && item.images.length > 0}}">
+        <image class="feed-img {{item.images.length === 1 ? 'feed-img-single' : ''}}"
+          wx:for="{{item.images}}"
+          wx:for-item="img"
+          wx:key="*this"
+          wx:if="{{index < 3}}"
+          src="{{img}}"
+          mode="aspectFill"
+          bindtap="onPreviewImage" data-urls="{{item.images}}" data-current="{{img}}">
+        </image>
+        <view class="feed-more-mask" wx:if="{{item.images.length > 3}}"
+          catchtap="onPreviewImage" data-urls="{{item.images}}" data-current="{{item.images[2]}}">
+          <text class="feed-more-text">+{{item.images.length - 3}}</text>
+        </view>
+      </view>
+
+      <view class="feed-video" wx:if="{{item.type === 'video'}}">
+        <image class="feed-video-cover" src="{{item.cover}}" mode="aspectFill"></image>
+        <image class="play-btn" src="/images/icon-play.png" mode="aspectFit"></image>
+      </view>
+
+      <view class="feed-actions">
+        <view class="feed-action">
+          <image src="/images/icon-heart.png" mode="aspectFit"></image>
+          <text>{{item.like_count}}</text>
+        </view>
+        <view class="feed-action">
+          <image src="/images/icon-comment.png" mode="aspectFit"></image>
+          <text>{{item.comment_count}}</text>
+        </view>
+        <view class="feed-action" bindtap="onShare">
+          <image src="/images/icon-share-sm.png" mode="aspectFit"></image>
+          <text>分享</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="load-more" wx:if="{{hasMore}}">上拉加载更多...</view>
+    <view class="load-more" wx:else>— 已加载全部 —</view>
+  </view>
+
+
+  <!-- 返回顶部 -->
+  <view class="back-to-top {{showBackTop ? 'back-to-top-show' : ''}}" bindtap="onBackTop" hover-class="haptic">
+    <image class="back-to-top-arrow" src="/images/icon-up.png" mode="aspectFit"></image>
+  </view>
+
+  <view class="safe-bottom" style="height: 40rpx;"></view>
+</view>

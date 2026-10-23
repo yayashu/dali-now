@@ -1,0 +1,127 @@
+<!-- 点位全部照片列表页 -->
+<view class="container page-photos {{themeClass}}">
+
+  <!-- ===== 沉浸式头部 ===== -->
+  <view class="photos-hero" style="padding-top: calc({{statusBarHeight}}px);">
+    <view class="hero-pattern"></view>
+    <view class="hero-nav-row">
+      <view class="nav-back-btn" bindtap="onNavBack" hover-class="nav-back-active">
+        <text class="nav-back-arrow">‹</text>
+      </view>
+      <view class="hero-title-wrap">
+        <text class="nav-title">{{pointName}} · 全部照片</text>
+        <text class="nav-subtitle">{{allPhotos.length}} 张照片</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- ===== 搜索+筛选栏 ===== -->
+  <view class="photo-toolbar">
+    <!-- 搜索栏 -->
+    <view class="search-row">
+      <view class="search-box {{showSearch ? 'search-box-active' : ''}}">
+        <image class="search-icon" src="/images/icon-search.png" bindtap="onToggleSearch" mode="aspectFit"></image>
+        <input
+          class="search-input"
+          placeholder="搜索描述、用户名、地点..."
+          placeholder-style="color:var(--text-hint)"
+          value="{{searchKeyword}}"
+          bindinput="onSearchInput"
+          focus="{{showSearch}}"
+        />
+        <image wx:if="{{searchKeyword}}" class="search-clear" bindtap="onClearSearch" src="/images/icon-close.png" mode="aspectFit"></image>
+      </view>
+    </view>
+
+    <!-- 筛选标签行 -->
+    <scroll-view class="filter-scroll" scroll-x enhanced show-scrollbar="{{false}}">
+      <view class="filter-section">
+        <image class="filter-label-icon" src="/images/icon-filter-date.png" mode="aspectFit"></image>
+        <view
+          class="filter-chip {{filterDate === item ? 'chip-active' : ''}}"
+          wx:for="{{dateOptions}}"
+          wx:key="*this"
+          bindtap="onDateFilter"
+          data-date="{{item}}"
+        >{{item}}</view>
+      </view>
+      <view class="filter-section">
+        <image class="filter-label-icon" src="/images/icon-filter-time.png" mode="aspectFit"></image>
+        <view
+          class="filter-chip {{filterTime === item ? 'chip-active' : ''}}"
+          wx:for="{{timeOptions}}"
+          wx:key="*this"
+          bindtap="onTimeFilter"
+          data-time="{{item}}"
+        >{{item}}:00</view>
+      </view>
+    </scroll-view>
+
+    <view class="reset-btn" bindtap="onReset" wx:if="{{filterDate || filterTime || searchKeyword}}">
+      <text>重置筛选</text>
+    </view>
+  </view>
+
+  <!-- 照片列表 -->
+  <view wx:if="{{displayPhotos.length > 0}}" class="photo-list">
+    <view
+      wx:for="{{displayPhotos}}"
+      wx:key="id"
+      class="photo-card"
+    >
+      <!-- 图片 -->
+      <view class="photo-img-wrap" bindtap="onPreviewPhoto" data-index="{{index}}">
+        <image class="photo-img" src="{{item.image_url}}" mode="aspectFill"></image>
+      </view>
+
+      <!-- 信息条 -->
+      <view class="photo-info-bar">
+        <view class="photo-location-info">
+          <view wx:if="{{item.location}}" class="photo-loc-view"><image class="photo-loc-icon" src="/images/icon-location-sm.png" mode="aspectFit"></image> {{item.location}}</view>
+        </view>
+        <view class="photo-date-info">
+          <text>{{item.shoot_date}} {{item.shoot_time}}</text>
+        </view>
+      </view>
+
+      <!-- 描述+用户 -->
+      <view class="photo-desc-wrap">
+        <view class="photo-user-row">
+          <image class="photo-user-avatar" src="{{item.user_avatar}}" mode="aspectFill"></image>
+          <text class="photo-user-name">{{item.user_name}}</text>
+        </view>
+        <text class="photo-desc" wx:if="{{item.description}}">{{item.description}}</text>
+      </view>
+
+      <!-- 互动 -->
+      <view class="photo-actions">
+        <view class="photo-action" bindtap="onLikePhoto" data-id="{{item.id}}">
+          <image class="photo-action-icon {{item.is_liked ? 'action-liked' : ''}}" src="/images/icon-heart.png" mode="aspectFit"></image>
+          <text>{{item.like_count}}</text>
+        </view>
+        <view class="photo-action" bindtap="onSharePhoto" data-id="{{item.id}}">
+          <image class="photo-action-icon" src="/images/icon-share-sm.png" mode="aspectFit"></image>
+          <text>分享</text>
+        </view>
+      </view>
+    </view>
+    <view class="load-more" wx:if="{{hasMore && displayPhotos.length > 0}}">上拉加载更多...</view>
+    <view class="load-more" wx:elif="{{!hasMore && displayPhotos.length > 0}}">— 已加载全部 —</view>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="no-photo" wx:if="{{displayPhotos.length === 0}}">
+    <image src="/images/icon-camera.png" mode="aspectFit"></image>
+    <text>没有匹配的照片</text>
+    <text class="text-light text-sm">试试调整筛选条件</text>
+  </view>
+
+
+  <!-- 返回顶部 -->
+  <view class="back-to-top {{showBackTop ? 'back-to-top-show' : ''}}" bindtap="onBackTop" hover-class="haptic">
+    <image class="back-to-top-arrow" src="/images/icon-up.png" mode="aspectFit"></image>
+  </view>
+
+  <!-- 底部安全距离 -->
+  <view style="height: 40rpx;"></view>
+</view>

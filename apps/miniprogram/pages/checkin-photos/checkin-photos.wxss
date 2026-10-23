@@ -1,0 +1,337 @@
+/* ============================================================
+   点位全部照片列表页 · checkin-photos
+   统一风格：沉浸式绿色头部 + 设计系统变量
+   ============================================================ */
+
+.page-photos {
+  background: var(--bg-page);
+}
+
+/* ========== 沉浸式头部 ========== */
+.photos-hero {
+  background: linear-gradient(160deg, var(--color-brand-dark) 0%, var(--color-brand) 40%, var(--color-brand-light) 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-pattern {
+  position: absolute;
+  top: -50%;
+  right: -30%;
+  width: 300rpx;
+  height: 300rpx;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.06);
+  pointer-events: none;
+}
+
+.photos-hero::after {
+  content: '';
+  position: absolute;
+  bottom: -30%;
+  left: -20%;
+  width: 200rpx;
+  height: 200rpx;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.04);
+  pointer-events: none;
+}
+
+.hero-nav-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 16rpx;
+  padding: 20rpx 24rpx 32rpx;
+  position: relative;
+  z-index: 1;
+}
+
+.nav-back-btn {
+  width: 60rpx;
+  height: 60rpx;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.nav-back-active {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(0.92);
+}
+
+.nav-back-arrow {
+  font-size: 40rpx;
+  color: #fff;
+  font-weight: 300;
+  line-height: 1;
+  margin-top: -2rpx;
+}
+
+.hero-title-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 4rpx;
+}
+
+.nav-title {
+  font-size: var(--text-lg);
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 1rpx;
+}
+
+.nav-subtitle {
+  font-size: var(--text-xs);
+  color: rgba(255, 255, 255, 0.65);
+}
+
+/* ========== 搜索+筛选工具栏 ========== */
+.photo-toolbar {
+  background: var(--bg-surface);
+  padding: 16rpx var(--space-lg);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  box-shadow: var(--shadow-sm);
+}
+
+.search-row {
+  margin-bottom: 12rpx;
+}
+
+.search-box {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  background: var(--bg-page);
+  border-radius: var(--radius-full);
+  padding: 12rpx 20rpx;
+  border: 2rpx solid transparent;
+  transition: all 0.25s ease;
+}
+
+.search-box-active {
+  background: var(--color-brand-bg);
+  border-color: var(--color-brand);
+}
+
+.search-icon {
+  width: 32rpx;
+  height: 32rpx;
+  flex-shrink: 0;
+  opacity: 0.45;
+}
+
+.search-input {
+  flex: 1;
+  font-size: var(--text-sm);
+  color: var(--text-body);
+  height: 40rpx;
+  line-height: 40rpx;
+}
+
+.search-clear {
+  width: 32rpx;
+  height: 32rpx;
+  opacity: 0.5;
+}
+
+/* 筛选标签 */
+.filter-scroll {
+  white-space: nowrap;
+  padding-bottom: 4rpx;
+}
+
+.filter-section {
+  display: inline-flex;
+  align-items: center;
+  gap: 10rpx;
+  margin-right: 24rpx;
+  vertical-align: middle;
+}
+
+.filter-label-icon {
+  width: 24rpx;
+  height: 24rpx;
+  flex-shrink: 0;
+  margin-right: 4rpx;
+}
+
+.filter-label-text {
+  font-size: var(--text-xs);
+  color: var(--text-hint);
+  flex-shrink: 0;
+}
+
+.filter-chip {
+  display: inline-block;
+  padding: 8rpx 20rpx;
+  background: var(--bg-page);
+  border-radius: var(--radius-full);
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  transition: all 0.2s ease;
+}
+
+.filter-chip.chip-active {
+  background: var(--color-brand);
+  color: #fff;
+  font-weight: 600;
+}
+
+/* 重置按钮 */
+.reset-btn {
+  text-align: right;
+  margin-top: 12rpx;
+}
+
+.reset-btn text {
+  font-size: var(--text-xs);
+  color: var(--color-danger);
+  padding: 8rpx 16rpx;
+  background: rgba(231, 76, 60, 0.06);
+  border-radius: var(--radius-full);
+}
+
+/* ========== 照片列表 ========== */
+.photo-list {
+  padding: var(--space-md) var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+
+.photo-card {
+  background: var(--bg-surface);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.photo-img-wrap {
+  width: 100%;
+  height: 400rpx;
+}
+
+.photo-img {
+  width: 100%;
+  height: 100%;
+}
+
+/* 信息条 */
+.photo-info-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14rpx 20rpx;
+  background: linear-gradient(135deg, var(--color-brand-bg), #f8faf9);
+  border-bottom: 1rpx solid var(--border-light);
+}
+
+.photo-loc-view {
+  display: flex;
+  align-items: center;
+  font-size: var(--text-sm);
+  color: var(--color-brand);
+  font-weight: 600;
+}
+.photo-loc-icon {
+  width: 24rpx;
+  height: 24rpx;
+  margin-right: 4rpx;
+}
+
+.photo-date-info {
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+}
+
+/* 描述 + 用户行 */
+.photo-desc-wrap {
+  padding: 16rpx 20rpx 12rpx;
+}
+
+.photo-user-row {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  margin-bottom: 8rpx;
+}
+
+.photo-user-avatar {
+  width: 36rpx;
+  height: 36rpx;
+  border-radius: 50%;
+}
+
+.photo-user-name {
+  font-size: var(--text-sm);
+  color: var(--text-body);
+  font-weight: 600;
+}
+
+.photo-desc {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* 互动操作行 */
+.photo-actions {
+  display: flex;
+  align-items: center;
+  gap: 32rpx;
+  padding: 12rpx 20rpx 16rpx;
+  border-top: 1rpx solid var(--border-light);
+}
+
+.photo-action-icon {
+  width: 32rpx;
+  height: 32rpx;
+  flex-shrink: 0;
+}
+
+.photo-action {
+  display: flex;
+  align-items: center;
+  gap: 6rpx;
+  font-size: var(--text-sm);
+  color: var(--text-hint);
+}
+
+.photo-action .liked {
+  animation: heartBeat 0.3s ease;
+}
+
+@keyframes heartBeat {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.3); }
+  100% { transform: scale(1); }
+}
+
+/* ========== 空状态 ========== */
+.no-photo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 120rpx 0;
+  gap: 12rpx;
+}
+
+.no-photo image {
+  width: 80rpx;
+  height: 80rpx;
+  opacity: 0.3;
+}
+
+.no-photo text {
+  font-size: var(--text-base);
+  color: var(--text-hint);
+}
+
+.text-light { color: var(--text-hint); }
+.text-sm { font-size: var(--text-xs); }

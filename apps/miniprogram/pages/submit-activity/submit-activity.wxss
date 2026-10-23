@@ -1,0 +1,2 @@
+/* 我要发布活动 - 样式复用 submit-checkin */
+@import '../submit-checkin/submit-checkin.wxss';

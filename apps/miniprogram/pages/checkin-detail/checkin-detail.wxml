@@ -1,0 +1,210 @@
+<!-- 打卡点位详情页 -->
+<view class="container page-checkin-detail {{themeClass}}">
+
+  <!-- 内联 Toast（避免 wx.showToast 原生浮层与导航过渡冲突） -->
+  <view class="inline-toast {{inlineToast ? 'inline-toast--show' : ''}}" wx:if="{{inlineToast}}">
+    <image class="inline-toast-icon" src="/images/icon-check-small.png" mode="aspectFit"></image>
+    <text>{{inlineToast}}</text>
+  </view>
+
+  <!-- 封面图 -->
+  <view class="detail-cover">
+    <image class="detail-cover-img" src="{{point.cover}}" mode="aspectFill"></image>
+    <view class="back-btn" bindtap="onBack">
+      <image src="/images/icon-back.png" mode="aspectFit"></image>
+    </view>
+    <view class="crowd-badge badge-{{crowdInfo.class}}">
+      <text>人流状态：{{point.crowd_level}}</text>
+    </view>
+  </view>
+
+  <!-- 基本信息 -->
+  <view class="card-no-margin detail-header-card">
+    <view class="detail-title-row">
+      <text class="detail-title">{{point.name}}</text>
+      <view class="tag {{point.type === 'scenic' ? 'tag-primary' : 'tag-accent'}}">
+        {{point.type === 'scenic' ? '景点固定' : '活动专属'}}
+      </view>
+    </view>
+    <view class="detail-scenic" wx:if="{{point.scenic_spot_name}}">
+      <image class="detail-scenic-icon" src="/images/icon-landmark.png" mode="aspectFit"></image>
+      <text class="detail-scenic-text">所属景区：{{point.scenic_spot_name}}</text>
+    </view>
+    <text class="detail-desc">{{point.description}}</text>
+
+    <!-- 人气 + 收费 信息 -->
+    <view class="detail-extra-row">
+      <view class="detail-popularity">
+        <image class="detail-extra-icon-img" src="/images/icon-hot.png" mode="aspectFit"></image>
+        <text class="detail-extra-label">人气指数</text>
+        <text class="detail-extra-value">{{point.popularityText}}</text>
+      </view>
+      <view class="detail-charge {{point.chargeType === 'paid' ? 'charge-fee' : 'charge-free'}}">
+        <text>{{point.chargeText || (point.chargeType === 'paid' ? '收费' : '免费')}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 人流状态详情 -->
+  <view class="card">
+    <view class="section-title">实时人流状态</view>
+    <view class="crowd-detail">
+      <view class="crowd-current">
+        <view class="crowd-current-icon {{crowdInfo.class}}">
+          <text>{{point.crowdLevel}}</text>
+        </view>
+        <text class="crowd-current-tip">当前状态</text>
+      </view>
+
+      <view class="crowd-timeline">
+        <view class="timeline-item">
+          <text class="timeline-label">早晨</text>
+          <view class="timeline-bar-wrap">
+            <view class="timeline-bar bar-{{point.crowdData.morning === '空旷' ? 'low' : point.crowdData.morning === '舒适' ? 'mid' : point.crowdData.morning === '较多' ? 'high' : 'full'}}"></view>
+          </view>
+          <text class="timeline-status">{{point.crowdData.morning}}</text>
+        </view>
+        <view class="timeline-item">
+          <text class="timeline-label">午间</text>
+          <view class="timeline-bar-wrap">
+            <view class="timeline-bar bar-{{point.crowdData.noon === '空旷' ? 'low' : point.crowdData.noon === '舒适' ? 'mid' : point.crowdData.noon === '较多' ? 'high' : 'full'}}"></view>
+          </view>
+          <text class="timeline-status">{{point.crowdData.noon}}</text>
+        </view>
+        <view class="timeline-item">
+          <text class="timeline-label">下午</text>
+          <view class="timeline-bar-wrap">
+            <view class="timeline-bar bar-{{point.crowdData.afternoon === '空旷' ? 'low' : point.crowdData.afternoon === '舒适' ? 'mid' : point.crowdData.afternoon === '较多' ? 'high' : 'full'}}"></view>
+          </view>
+          <text class="timeline-status">{{point.crowdData.afternoon}}</text>
+        </view>
+        <view class="timeline-item">
+          <text class="timeline-label">傍晚</text>
+          <view class="timeline-bar-wrap">
+            <view class="timeline-bar bar-{{point.crowdData.evening === '空旷' ? 'low' : point.crowdData.evening === '舒适' ? 'mid' : point.crowdData.evening === '较多' ? 'high' : 'full'}}"></view>
+          </view>
+          <text class="timeline-status">{{point.crowdData.evening}}</text>
+        </view>
+      </view>
+
+      <view class="crowd-peak-info">
+        <image src="/images/icon-warning.png" mode="aspectFit"></image>
+        <text>高峰时段：{{point.crowdPeak}}</text>
+        <text class="crowd-advice">建议错峰出行</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 官方机位教程 -->
+  <view class="card">
+    <view class="section-title"><image class="section-title-icon" src="/images/icon-camera.png" mode="aspectFit"></image> 官方机位教程</view>
+
+    <view class="tutorial-item">
+      <view class="tutorial-label">
+        <image src="/images/icon-angle.png" mode="aspectFit"></image>
+        <text>拍摄角度</text>
+      </view>
+      <text class="tutorial-content">{{point.angle}}</text>
+    </view>
+
+    <view class="tutorial-item">
+      <view class="tutorial-label">
+        <image src="/images/icon-composition.png" mode="aspectFit"></image>
+        <text>构图方式</text>
+      </view>
+      <text class="tutorial-content">{{point.composition}}</text>
+    </view>
+
+    <view class="tutorial-item">
+      <view class="tutorial-label">
+        <image src="/images/icon-clock-sm.png" mode="aspectFit"></image>
+        <text>最佳拍摄时段</text>
+      </view>
+      <text class="tutorial-content text-primary text-bold">{{point.bestTime}}</text>
+    </view>
+
+    <view class="tutorial-item">
+      <view class="tutorial-label">
+        <image src="/images/icon-tip.png" mode="aspectFit"></image>
+        <text>拍摄小贴士</text>
+      </view>
+      <text class="tutorial-content">{{point.tips}}</text>
+    </view>
+
+    <view class="tutorial-item">
+      <view class="tutorial-label">
+        <image src="/images/icon-taboo.png" mode="aspectFit"></image>
+        <text>拍摄禁忌</text>
+      </view>
+      <text class="tutorial-content text-danger">{{point.taboos}}</text>
+    </view>
+  </view>
+
+  <!-- 照片分享展示 -->
+  <view class="card">
+    <view class="section-header-row">
+      <view class="section-title"><image class="section-title-icon" src="/images/icon-photo.png" mode="aspectFit"></image> 大家在这里拍的照片</view>
+      <view wx:if="{{photos.length > 0}}" class="photo-more-btn" bindtap="onGoPhotoList">
+        <text>更多</text>
+        <text class="more-arrow">›</text>
+      </view>
+    </view>
+
+    <view wx:if="{{displayPhotos.length > 0}}">
+      <!-- 照片网格 3列 -->
+      <view class="photo-mini-grid">
+        <view
+          wx:for="{{displayPhotos}}"
+          wx:key="id"
+          class="photo-mini-item"
+          bindtap="onPreviewMiniPhoto"
+          data-index="{{index}}"
+        >
+          <image class="photo-mini-img" src="{{item.image_url}}" mode="aspectFill"></image>
+          <view class="photo-mini-overlay">
+            <view class="photo-mini-like"><image class="photo-mini-like-icon" src="/images/icon-heart.png" mode="aspectFit"></image> {{item.like_count}}</view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 无照片 -->
+    <view class="no-photo" wx:if="{{displayPhotos.length === 0}}">
+      <image src="/images/icon-camera.png" mode="aspectFit"></image>
+      <text>还没有人在这里分享照片</text>
+      <text class="text-light text-sm">快来成为第一个打卡分享的人吧！</text>
+    </view>
+  </view>
+
+  <!-- 精准指引 - 卡片内容 -->
+  <view class="card guidance-card">
+    <view class="section-title"><image class="section-title-icon" src="/images/icon-location-sm.png" mode="aspectFit"></image> 精准指引</view>
+    <view class="landmark-box">
+      <image src="/images/icon-landmark.png" mode="aspectFit"></image>
+      <text>{{point.landmark}}</text>
+    </view>
+  </view>
+
+  <!-- 底部安全距离（给固定栏留空间） -->
+  <view style="height: 160rpx;"></view>
+
+  <!-- 底部固定操作栏 -->
+  <view class="bottom-guidance-bar">
+    <view class="guidance-info">
+      <image src="/images/icon-landmark.png" mode="aspectFit"></image>
+      <text class="guidance-text">{{point.landmark}}</text>
+    </view>
+    <button class="guidance-share-btn" open-type="share">
+      <image src="/images/icon-share.png" mode="aspectFit"></image>
+    </button>
+    <view class="guidance-nav-btn" bindtap="onNavigate">
+      <image src="/images/icon-nav-white.png" mode="aspectFit"></image>
+      <text>一键导航</text>
+    </view>
+    <view class="guidance-checkin-btn" bindtap="onDoCheckin">
+      <image src="/images/icon-camera.png" mode="aspectFit"></image>
+      <text>我要打卡</text>
+    </view>
+  </view>
+
+</view>

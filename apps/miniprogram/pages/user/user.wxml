@@ -1,0 +1,125 @@
+<!-- 用户中心 · 大理此刻 -->
+<view class="container page-user {{themeClass}}">
+
+  <!-- 禁闭提醒（可明显显示） -->
+  <view class="ban-notice" wx:if="{{isMuted}}">
+    <view class="ban-notice-icon"><image src="/images/icon-warning.png" mode="aspectFit" style="width:44rpx;height:44rpx;"></image></view>
+    <view class="ban-notice-body">
+      <text class="ban-notice-title">账号已被禁闭</text>
+      <text class="ban-notice-desc">{{banMessage}}</text>
+    </view>
+  </view>
+
+  <!-- 沉浸式头部 -->
+  <view class="user-hero page-header-brand">
+    <view class="user-hero-inner">
+      <view class="user-row" bindtap="{{isLoggedIn ? 'onGoProfile' : 'onLogin'}}" hover-class="haptic">
+        <image class="user-avatar" src="{{userInfo.avatar || '/images/avatar-default.png'}}" mode="aspectFill"></image>
+        <view class="user-text" wx:if="{{isLoggedIn}}">
+          <text class="user-name">{{userInfo.name || '旅行者'}}</text>
+          <text class="user-id">ID: {{userInfo.id || 'DL20260602'}}</text>
+        </view>
+        <view class="user-text" wx:else>
+          <text class="user-name">点击登录</text>
+          <text class="user-id">登录后享受更多服务</text>
+        </view>
+        <text class="user-arr">›</text>
+      </view>
+
+      <!-- 数据概览 -->
+      <view class="user-stats" wx:if="{{isLoggedIn}}">
+        <view class="user-stat" bindtap="onNavTo" data-url="/pages/user-activities/user-activities">
+          <text class="stat-num">{{stats.activityCount}}</text>
+          <text class="stat-label">我的活动</text>
+        </view>
+        <view class="stat-divider"></view>
+        <view class="user-stat" bindtap="onNavTo" data-url="/pages/user-posts/user-posts">
+          <text class="stat-num">{{stats.postCount}}</text>
+          <text class="stat-label">现场发文</text>
+        </view>
+        <view class="stat-divider"></view>
+        <view class="user-stat" bindtap="onNavTo" data-url="/pages/user-favorites/user-favorites">
+          <text class="stat-num">{{stats.favCount}}</text>
+          <text class="stat-label">我的收藏</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 菜单 -->
+  <view class="user-menu-section">
+    <!-- 我的活动 -->
+    <view class="menu-card">
+      <view class="menu-heading"><image class="menu-heading-icon" src="/images/icon-clipboard.png" mode="aspectFit"></image> 我的活动</view>
+      <view class="menu-item" bindtap="onNavTo" data-url="/pages/user-activities/user-activities">
+        <image class="menu-icon-img" src="/images/icon-calendar.png" mode="aspectFit"></image>
+        <text class="menu-label">已预约/已参与</text>
+        <text class="menu-badge" wx:if="{{stats.activityCount > 0}}">{{stats.activityCount}}</text>
+        <text class="menu-arr">›</text>
+      </view>
+    </view>
+
+    <!-- 内容记录 -->
+    <view class="menu-card">
+      <view class="menu-heading"><image class="menu-heading-icon" src="/images/icon-note.png" mode="aspectFit"></image> 内容记录</view>
+      <view class="menu-item" bindtap="onNavTo" data-url="/pages/user-checkins/user-checkins">
+        <image class="menu-icon-img" src="/images/icon-location-sm.png" mode="aspectFit"></image>
+        <text class="menu-label">我的打卡</text>
+        <text class="menu-arr">›</text>
+      </view>
+      <view class="menu-item" bindtap="onNavTo" data-url="/pages/user-posts/user-posts">
+        <image class="menu-icon-img" src="/images/icon-camera.png" mode="aspectFit"></image>
+        <text class="menu-label">我的现场发文</text>
+        <text class="menu-arr">›</text>
+      </view>
+      <view class="menu-item" bindtap="onNavTo" data-url="/pages/user-favorites/user-favorites">
+        <image class="menu-icon-img" src="/images/icon-heart.png" mode="aspectFit"></image>
+        <text class="menu-label">我的收藏</text>
+        <text class="menu-arr">›</text>
+      </view>
+    </view>
+
+    <!-- 共创贡献 -->
+    <view class="menu-card">
+      <view class="menu-heading"><image class="menu-heading-icon" src="/images/icon-star.png" mode="aspectFit"></image> 共创贡献</view>
+      <view class="menu-item" bindtap="onNavTo" data-url="/pages/submit-checkin/submit-checkin">
+        <image class="menu-icon-img" src="/images/icon-map.png" mode="aspectFit"></image>
+        <text class="menu-label">发现新打卡点</text>
+        <text class="menu-arr">›</text>
+      </view>
+      <view class="menu-item" bindtap="onNavTo" data-url="/pages/submit-activity/submit-activity">
+        <image class="menu-icon-img" src="/images/icon-party.png" mode="aspectFit"></image>
+        <text class="menu-label">我要发布活动</text>
+        <text class="menu-arr">›</text>
+      </view>
+    </view>
+
+    <!-- 消息与服务 -->
+    <view class="menu-card">
+      <view class="menu-heading"><image class="menu-heading-icon" src="/images/icon-settings.png" mode="aspectFit"></image> 消息与服务</view>
+      <view class="menu-item" bindtap="onNavTo" data-url="/pages/about/about">
+        <image class="menu-icon-img" src="/images/icon-info.png" mode="aspectFit"></image>
+        <text class="menu-label">关于</text>
+        <text class="menu-tag">V1.0</text>
+        <text class="menu-arr">›</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 会员预览 -->
+  <view class="vip-card">
+    <image class="vip-icon" src="/images/icon-vip.png" mode="aspectFit"></image>
+    <view class="vip-text">
+      <text class="vip-title">会员体系即将上线</text>
+      <text class="vip-desc">解锁专属权益，享受深度大理体验</text>
+    </view>
+    <text class="vip-arr">›</text>
+  </view>
+
+  <!-- 退出登录 -->
+  <view class="logout-section" wx:if="{{isLoggedIn}}">
+    <button class="logout-btn" bindtap="onLogout">退出登录</button>
+  </view>
+
+  <view class="safe-bottom" style="height:40rpx;"></view>
+</view>

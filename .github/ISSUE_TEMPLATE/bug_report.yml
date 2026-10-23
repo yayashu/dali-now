@@ -1,0 +1,50 @@
+name: Bug 报告
+description: 报告一个缺陷或异常行为
+labels: ["bug"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: 问题描述
+      description: 清晰简洁地描述遇到的问题
+    validations:
+      required: true
+  - type: dropdown
+    id: service
+    attributes:
+      label: 涉及服务
+      options:
+        - Node.js 公开 API (端口 3000)
+        - Python 管理后台 API (端口 5000)
+        - 数据库 / 脚本
+        - 部署 / Nginx / PM2
+        - 其他
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: 复现步骤
+      placeholder: |
+        1. 请求 'GET /api/...'
+        2. 携带参数 ...
+        3. 观察到 ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: 期望行为
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: 日志 / 报错信息
+      description: 服务端日志片段（请隐去密码、密钥等敏感信息）
+      render: shell
+  - type: textarea
+    id: environment
+    attributes:
+      label: 环境信息
+      placeholder: Node.js 版本 / Python 版本 / MySQL 版本 / 操作系统
